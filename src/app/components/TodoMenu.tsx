@@ -1,0 +1,56 @@
+'use client'
+
+import { useAppContext } from '@/app/contexts/app';
+
+const TodoMenu = () => {
+
+  const { state, dispatch } = useAppContext();
+
+  // JavaScript currying
+  const setFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: 'SET_FILTER', payload: { filter: event.target.value } });
+  }
+
+  return (
+    <menu className='flex justify-center gap-6 mt-4 p-4 font-bold bg-very-light-gray dark:bg-very-dark-desaturated-blue text-dark-grayish-blue dark:text-dark-grayish-blue-alt rounded-md'>
+      <li>
+        <input
+          className='appearance-none'
+          type='radio'
+          name='tasks-filter'
+          id='filter-all'
+          value='all'
+          checked={state.filter === 'all'}
+          onChange={setFilter}
+        />
+        <label className={`cursor-pointer hover:text-very-dark-grayish-blue dark:hover:text-light-grayish-blue-alt ${state.filter === 'all' ? 'text-bright-blue' : ''}`} htmlFor='filter-all'>All</label>
+      </li>
+      <li>
+        <input
+          className='appearance-none'
+          type='radio'
+          name='tasks-filter'
+          id='filter-active'
+          value='active'
+          checked={state.filter === 'active'}
+          onChange={setFilter}
+        />
+        <label className={`cursor-pointer hover:text-very-dark-grayish-blue dark:hover:text-light-grayish-blue-alt ${state.filter === 'active' ? 'text-bright-blue' : ''}`} htmlFor='filter-active'>Active</label>
+      </li>
+      <li>
+        <input
+          className='appearance-none'
+          type='radio'
+          name='tasks-filter'
+          id='filter-completed'
+          value='completed'
+          checked={state.filter === 'completed'}
+          onChange={setFilter}
+        />
+        <label className={`cursor-pointer hover:text-very-dark-grayish-blue dark:hover:text-light-grayish-blue-alt ${state.filter === 'completed' ? 'text-bright-blue' : ''}`} htmlFor='filter-completed'>Completed</label>
+      </li>
+    </menu>
+  )
+}
+
+export default TodoMenu
