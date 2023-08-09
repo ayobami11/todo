@@ -19,9 +19,9 @@ export async function POST(request: Request) {
             const trimmedValue = value.trim();
 
             if (trimmedValue.length === 0) {
-                return NextResponse.json({ success: false, message: `Input field: ${key} cannot have an empty value` }, { status: 400 });
+                return NextResponse.json({ message: `Input field: ${key} cannot have an empty value` }, { status: 400 });
             } else if (trimmedValue.length > 30) {
-                return NextResponse.json({ success: false, message: `Input field: ${key} cannot exceed 30 characters` }, { status: 400 });
+                return NextResponse.json({ message: `Input field: ${key} cannot exceed 30 characters` }, { status: 400 });
             }
         }
 
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
         const existingUser = await User.findOne({ email: data.email });
 
         if (existingUser) {
-            return NextResponse.json({ success: false, message: 'User already exists' }, { status: 422 });
+            return NextResponse.json({ message: 'User already exists' }, { status: 422 });
         }
 
         // if the name has not been taken, a new user is created
@@ -42,10 +42,10 @@ export async function POST(request: Request) {
 
         await newUser.save();
 
-        return NextResponse.json({ success: true, message: 'Signup was successful' }, { status: 201 });
+        return NextResponse.json({ message: 'Signup was successful' }, { status: 201 });
     } catch (error) {
 
         console.log(error);
-        return NextResponse.json({ success: false, message: 'Something went wrong. Please try again' }, { status: 500 });
+        return NextResponse.json({ message: 'Something went wrong. Please try again' }, { status: 500 });
     }
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Josefin_Sans } from 'next/font/google';
 
-import { AppContextProvider } from '@/app/contexts/app';
+import { AppContextProvider } from '@/contexts/app';
 
 const josefinSans = Josefin_Sans({
   subsets: ['latin'],
@@ -30,7 +30,7 @@ export default function RootLayout({
 
     Source: https://github.com/pacocoursey/next-themes#with-app
   */
- 
+
   return (
     <html lang='en' className={`${josefinSans.variable}`} suppressHydrationWarning>
       <body className='font-primary text-lg dark:bg-very-dark-blue'>

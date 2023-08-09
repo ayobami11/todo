@@ -11,6 +11,15 @@ import Task from '@/models/Task';
 export async function PATCH(request: NextRequest, { params }: { params: { taskId: string } }) {
     try {
 
+        // checks if the provided message input is valid
+        const data = await request.json();
+
+        data.message = data.message.trim();
+
+        if (data.message.length === 0) {
+            return NextResponse.json({ message: 'Message input cannot be empty' }, { status: 400 });
+        }
+
         // checks if the user is logged in
         const session = await getServerSession(authOptions);
 
@@ -21,17 +30,17 @@ export async function PATCH(request: NextRequest, { params }: { params: { taskId
         await connectToDatabase();
 
         // searches the database for the task, if any
-        const taskToUpdate = await Task.findOne({ _id: params.taskId, userId: session.user.id });
+        const updatedTask = await Task.findOneAndUpdate(
+            { _id: params.taskId, userId: session.user.id },
+            { message: data.message },
+            { new: true }
+        ).select('message completed');
 
-        if (!taskToUpdate) {
+        if (!updatedTask) {
             return NextResponse.json({ message: 'Task not found' }, { status: 404 });
         }
 
-        taskToUpdate.completed = !taskToUpdate.completed;
-
-        await taskToUpdate.save();
-
-        return NextResponse.json({ message: 'Task updated successfully' }, { status: 200 });
+        return NextResponse.json({ message: 'Task updated successfully', task: updatedTask }, { status: 200 });
 
     } catch (error) {
         console.log(error);

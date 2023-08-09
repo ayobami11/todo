@@ -4,7 +4,7 @@ import { createContext, useContext, useReducer } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
 
-import { AppState, reducer, initialState } from '@/app/reducers/app';
+import { AppState, reducer, initialState } from '@/reducers/app';
 
 export interface AppContextType {
     state: AppState,
@@ -18,7 +18,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
     const [state, dispatch] = useReducer(reducer, initialState);
 
     return (
-        <AppContext.Provider value={{state, dispatch}}>
+        <AppContext.Provider value={{ state, dispatch }}>
             <SessionProvider>
                 <ThemeProvider attribute='class'>
                     {children}

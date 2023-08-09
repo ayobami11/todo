@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 interface ITask {
     userId: mongoose.Types.ObjectId,
-    task: string,
+    message: string,
     completed: boolean
 }
 
@@ -11,7 +11,7 @@ const TaskSchema = new mongoose.Schema<ITask>({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    task: {
+    message: {
         type: String,
         required: true
     },

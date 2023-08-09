@@ -59,7 +59,10 @@ const SignupForm = () => {
     const sendRequest = async (url: string, { arg }: { arg: SignupDetailsType }) => {
         return await fetch(url, {
             method: 'POST',
-            body: JSON.stringify(arg)
+            body: JSON.stringify(arg),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         })
     }
 

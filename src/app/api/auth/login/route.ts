@@ -24,9 +24,9 @@ export async function POST(request: Request) {
                 const trimmedValue = value.trim();
 
                 if (trimmedValue.length === 0) {
-                    return NextResponse.json({ success: false, message: `Input field: ${key} cannot have an empty value` }, { status: 400 });
+                    return NextResponse.json({ message: `Input field: ${key} cannot have an empty value` }, { status: 400 });
                 } else if (trimmedValue.length > 30) {
-                    return NextResponse.json({ success: false, message: `Input field: ${key} cannot exceed 30 characters` }, { status: 400 });
+                    return NextResponse.json({ message: `Input field: ${key} cannot exceed 30 characters` }, { status: 400 });
                 }
             }
         }
@@ -38,21 +38,21 @@ export async function POST(request: Request) {
         const user = await User.findOne({ email: data.email });
 
         if (!user) {
-            return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 400 });
+            return NextResponse.json({ message: 'Invalid credentials' }, { status: 400 });
         }
 
         const isPasswordValid = await verifyPassword(data.password, user.password);
 
         if (!isPasswordValid) {
-            return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 400 });
+            return NextResponse.json({ message: 'Invalid credentials' }, { status: 400 });
         }
 
         await user.generateAccessToken();
 
-        return NextResponse.json({ success: true, message: 'Login was successful', user }, { status: 200 });
+        return NextResponse.json({ message: 'Login was successful', user }, { status: 200 });
     } catch (error) {
 
         console.log(error);
-        return NextResponse.json({ success: false, message: 'Something went wrong. Please try again' }, { status: 500 });
+        return NextResponse.json({ message: 'Something went wrong. Please try again' }, { status: 500 });
     }
 }

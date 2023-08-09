@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react';
 
 import useSWRMutation from 'swr/mutation';
 
-import { useAppContext } from '@/app/contexts/app';
+import { useAppContext } from '@/contexts/app';
 
 import TodoItem from '@/app/components/TodoItem';
 
@@ -36,7 +36,7 @@ const TodoList = () => {
         const getTasks = async () => {
             try {
                 const response = await trigger();
-                
+
                 if (response.ok) {
                     const data = await response.json();
 

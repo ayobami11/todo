@@ -4,89 +4,132 @@ import Image from 'next/image';
 
 import useSWRMutation from 'swr/mutation';
 
-import { TaskType } from '@/app/reducers/app';
+import { useState, useRef } from 'react';
 
-import { useAppContext } from '@/app/contexts/app';
+import { TaskType } from '@/reducers/app';
+
+import { useAppContext } from '@/contexts/app';
 
 import crossIcon from '../../../public/assets/images/icon-cross.svg';
 import checkIcon from '../../../public/assets/images/icon-check.svg';
 
-const TodoItem = ({ _id: id, task, completed }: TaskType) => {
+const TodoItem = ({ _id: id, message, completed }: TaskType) => {
+
+    const formRef = useRef<HTMLFormElement>(null);
+
+    const [showEditInput, setShowEditInput] = useState<boolean>(false);
+    const [editInputValue, setEditInputValue] = useState<string>('');
 
     const { dispatch } = useAppContext();
 
-    const sendGetRequest = async (url: string) => {
-        return await fetch(url);
+    const toggleEditInputVisibility = () => {
+        if (message !== editInputValue) {
+            setEditInputValue(message);
+        }
+
+        setShowEditInput(prevState => !prevState);
     }
 
-    const { trigger: triggerGetRequest } = useSWRMutation('/api/tasks', sendGetRequest);
-
-    const getTasks = async () => {
-        try {
-            const response = await triggerGetRequest();
-
-            if (response.ok) {
-                const data = await response.json();
-
-                dispatch({ type: 'SET_TASKS', payload: { tasks: data.tasks } });
-            }
-
-        } catch (error) {
-            console.log(error);
-        }
+    const handleEditInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEditInputValue(event.target.value);
     }
 
     const sendDeleteRequest = async (url: string) => {
         return await fetch(url, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
     }
 
     const { trigger: triggerDeleteRequest, isMutating: isMutatingDelete } = useSWRMutation(`/api/tasks/${id}`, sendDeleteRequest);
 
     const deleteTask = () => {
-
-        const sendRequest = async () => {
-            try {
-                const response = await triggerDeleteRequest();
-                const result = await response.json();
-
-                console.log(result);
-                if (response.ok) {
-                    getTasks();
-                }
-
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        sendRequest();
-    }
-
-    const sendPatchRequest = async (url: string) => {
-        return await fetch(url, {
-            method: 'PATCH'
-        });
-    }
-
-    const { trigger: triggerPatchRequest, isMutating: isMutatingPatch } = useSWRMutation(`/api/tasks/${id}/toggleCompleted`, sendPatchRequest);
-
-    const toggleCompleted = () => {
         (async () => {
             try {
-                const response = await triggerPatchRequest();
-                const result = await response.json();
+                const response = await triggerDeleteRequest();
 
-                console.log(result);
                 if (response.ok) {
-                    getTasks();
+                    dispatch({ type: 'DELETE_TASK', payload: { taskId: id } });
                 }
 
             } catch (error) {
                 console.log(error);
             }
         })();
+    }
+
+    const sendToggleCompletedRequest = async (url: string) => {
+        return await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+
+    const { trigger: triggerToggleCompletedRequest, isMutating: isMutatingToggleCompleted } = useSWRMutation(`/api/tasks/${id}/toggleCompleted`, sendToggleCompletedRequest);
+
+    const toggleCompleted = () => {
+        (async () => {
+            try {
+                const response = await triggerToggleCompletedRequest();
+
+                if (response.ok) {
+                    dispatch({ type: 'TOGGLE_TASK_COMPLETED', payload: { taskId: id } });
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        })();
+    }
+
+    const sendUpdateMessageRequest = async (url: string) => {
+        return await fetch(url, {
+            method: 'PATCH',
+            body: JSON.stringify({ message: editInputValue }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+
+    const { trigger: triggerUpdateMessageRequest, isMutating: isMutatingUpdateMessage } = useSWRMutation(`/api/tasks/${id}/editMessage`, sendUpdateMessageRequest);
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        // removes any leading or trailing whitespace
+        setEditInputValue(prevState => prevState.trim());
+
+        const updateTask = async () => {
+            try {
+
+                const response = await triggerUpdateMessageRequest();
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    setShowEditInput(false);
+                    setEditInputValue('');
+
+                    dispatch({ type: 'UPDATE_TASK', payload: { taskId: id, updatedTask: result.task } });
+                }
+
+                console.log(result);
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        if (message) {
+            updateTask();
+        } else {
+            formRef.current?.reportValidity();
+        }
     }
 
     return (
@@ -102,7 +145,7 @@ const TodoItem = ({ _id: id, task, completed }: TaskType) => {
                     name='task'
                     id={`task-${id}`}
                     checked={completed}
-                    disabled={isMutatingPatch}
+                    disabled={isMutatingToggleCompleted}
                     onChange={toggleCompleted}
                 />
                 <label htmlFor={`task-${id}`}
@@ -123,15 +166,30 @@ const TodoItem = ({ _id: id, task, completed }: TaskType) => {
                     </div>
                 </label>
                 <label htmlFor={`task-${id}`}
-                    className='peer-checked:text-light-grayish-blue dark:peer-checked:text-very-dark-grayish-blue peer-checked:line-through hover:cursor-pointer'>{task}</label>
+                    className='peer-checked:text-light-grayish-blue dark:peer-checked:text-very-dark-grayish-blue peer-checked:line-through hover:cursor-pointer'>{message}</label>
             </div>
 
+            <button onClick={toggleEditInputVisibility}>{showEditInput ? 'Hide' : 'Edit'}</button>
             <button className='opacity-0 group-hover/item:opacity-100 focus:opacity-100' disabled={isMutatingDelete} onClick={deleteTask}>
                 <Image
                     src={crossIcon}
                     alt='Close icon'
                 />
             </button>
+            {
+                showEditInput ? (
+                    <form onSubmit={handleSubmit}>
+                        <input
+                            type='text'
+                            name='message'
+                            value={editInputValue}
+                            required
+                            onChange={handleEditInputChange}
+                        />
+                        <button type='submit' disabled={(message === editInputValue) || isMutatingUpdateMessage}>Save</button>
+                    </form>
+                ) : null
+            }
         </li>
     )
 }

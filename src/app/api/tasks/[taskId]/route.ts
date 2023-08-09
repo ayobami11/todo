@@ -13,14 +13,14 @@ export async function DELETE(request: NextRequest, { params }: { params: { taskI
 
         // checks if a valid taskId is provided
         if (!params.taskId) {
-            return NextResponse.json({ success: false, message: 'Invalid taskId' }, { status: 400 });
+            return NextResponse.json({ message: 'Invalid taskId' }, { status: 400 });
         }
 
         // checks if the user is logged in
         const session = await getServerSession(authOptions);
 
         if (!session) {
-            return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+            return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }
 
         await connectToDatabase();
@@ -28,7 +28,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { taskI
         // searches the database for the task, if any
         await Task.deleteOne({ _id: params.taskId, userId: session.user.id });
 
-        return NextResponse.json({ success: true, message: 'Task deleted successfully' }, { status: 200 });
+        return NextResponse.json({ message: 'Task deleted successfully' }, { status: 200 });
 
     } catch (error) {
         console.log(error);

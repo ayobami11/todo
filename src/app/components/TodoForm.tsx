@@ -1,52 +1,57 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 import useSWRMutation from 'swr/mutation';
 
-import { useAppContext } from '@/app/contexts/app';
+import { useAppContext } from '@/contexts/app';
 
 export interface AddTaskType {
-    task: string
+    message: string
 }
 
 const TodoForm = () => {
 
+    const formRef = useRef<HTMLFormElement>(null);
+
     const { dispatch } = useAppContext();
 
-    const [task, setTask] = useState<string>('');
+    const [message, setMessage] = useState<string>('');
 
-    const handleTaskChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        setTask(event.target.value);
+    const handleMessageChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        setMessage(event.target.value);
     }
 
-    const sendGetRequest = async (url: string) => {
-        return await fetch(url);
-    }
-
-    const sendPostRequest = async (url: string) => {
+    const sendRequest = async (url: string) => {
         return await fetch(url, {
             method: 'POST',
-            body: JSON.stringify({ task })
+            body: JSON.stringify({ message }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
     }
 
-    const { trigger: triggerGetRequest } = useSWRMutation('/api/tasks', sendGetRequest);
-    const { trigger: triggerPostRequest, isMutating } = useSWRMutation('/api/tasks', sendPostRequest);
+    const { trigger, isMutating } = useSWRMutation('/api/tasks', sendRequest);
 
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        // removes any leading or trailing whitespace
+        setMessage(prevState => prevState.trim());
+
         const addTask = async () => {
             try {
 
-                const response = await triggerPostRequest();
+                const response = await trigger();
 
                 const result = await response.json();
 
                 if (response.ok) {
-                    setTask('');
+                    setMessage('');
+
+                    dispatch({ type: 'ADD_TASK', payload: { newTask: result.task } });
                 }
 
                 console.log(result);
@@ -56,38 +61,24 @@ const TodoForm = () => {
             }
         }
 
-        const getTasks = async () => {
-            try {
-                const response = await triggerGetRequest();
-
-                if (response.ok) {
-                    const data = await response.json();
-
-                    dispatch({ type: 'SET_TASKS', payload: { tasks: data.tasks } });
-                }
-
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        if (task) {
+        if (message) {
             addTask();
-            getTasks();
+        } else {
+            formRef.current?.reportValidity();
         }
     }
 
     return (
-        <form onSubmit={handleSubmit} className='bg-very-light-gray dark:bg-very-dark-desaturated-blue w-full rounded-lg p-4 mb-5'>
+        <form ref={formRef} onSubmit={handleSubmit} className='bg-very-light-gray dark:bg-very-dark-desaturated-blue w-full rounded-lg p-4 mb-5'>
             <input
                 className='text-very-dark-grayish-blue dark:text-light-grayish-blue bg-transparent w-full placeholder:text-light-grayish-blue dark:placeholder:text-very-dark-grayish-blue focus:outline-none'
                 type='text'
-                name='task'
-                id='task'
+                name='message'
+                id='message'
                 placeholder='Create a new todo...'
-                value={task}
+                value={message}
                 required
-                onChange={handleTaskChange}
+                onChange={handleMessageChange}
             />
             <button type='submit' disabled={isMutating}>Submit</button>
         </form>
