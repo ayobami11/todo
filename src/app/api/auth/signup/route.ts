@@ -30,6 +30,7 @@ export async function POST(request: Request) {
 
         // checks if the email has already been taken
         const existingUser = await User.findOne({ email: data.email });
+        console.log(existingUser)
 
         if (existingUser) {
             return NextResponse.json({ message: 'User already exists' }, { status: 422 });

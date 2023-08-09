@@ -2,6 +2,8 @@
 
 import { useState, useRef } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import useSWRMutation from 'swr/mutation';
 
 export interface SignupDetailsType {
@@ -14,6 +16,8 @@ export interface SignupDetailsType {
 const SignupForm = () => {
 
     const formRef = useRef<HTMLFormElement>(null);
+
+    const router =  useRouter();
 
     const [formDetails, setFormDetails] = useState<SignupDetailsType>({
         email: '',
@@ -73,9 +77,11 @@ const SignupForm = () => {
 
         const submitFormdata = async () => {
             try {
-                const result = await trigger(formDetails);
+                const response = await trigger(formDetails);
 
-                console.log(result);
+                if (response.ok) {
+                    router.push('/login');
+                }
 
             } catch (error) {
                 console.log(error);

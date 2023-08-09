@@ -1,10 +1,8 @@
 import bcrypt from 'bcryptjs';
 
 import type { NextAuthOptions } from 'next-auth';
-import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import clientPromise from '@/lib/mongodb';
 
 import User from '@/models/User';
 import { connectToDatabase } from '@/lib/mongoose';
@@ -21,7 +19,6 @@ export const verifyPassword = async (password: string, hashedPassword: string) =
 }
 
 export const authOptions: NextAuthOptions = {
-    // adapter: MongoDBAdapter(clientPromise),
     pages: {
         signIn: '/login'
     },
@@ -44,9 +41,6 @@ export const authOptions: NextAuthOptions = {
                 }
             },
             async authorize(credentials) {
-                // console.log(credentials)
-                // console.log('checking credentials')
-
                 try {
 
                     if (!credentials?.email || !credentials?.password) {
@@ -79,12 +73,7 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
-        async signIn({ profile, user, email, credentials, account }) {
-            // console.log('profile', profile);
-            // console.log('user', user);
-            // console.log('email', email);
-            // console.log('credentials', credentials);
-            // console.log('account', account);
+        async signIn({ profile, user, account }) {
 
             try {
 
@@ -96,16 +85,20 @@ export const authOptions: NextAuthOptions = {
 
                     await connectToDatabase();
 
-                    const doesUserExist = await User.findOne({ email: profile.email });
+                    const existingUser = await User.findOne({ email: profile.email });
 
-                    console.log(doesUserExist);
-
-                    if (!doesUserExist) {
-                        await User.create({
+                    if (existingUser) {
+                        user._id = existingUser._id;
+                    } else {
+                        const newUser =  new User({
                             email: profile.email,
                             name: profile.name,
                             account_type: 'google'
                         });
+                        
+                        await newUser.save();
+
+                        user._id = newUser._id;
                     }
 
                     return true;
@@ -121,13 +114,7 @@ export const authOptions: NextAuthOptions = {
                 return false;
             }
         },
-        async jwt({ token, user, account, profile }) {
-            // console.log('user', user);
-            // console.log('token', token);
-            // console.log('account', account);
-            // console.log('profile', profile);
-
-
+        async jwt({ token, user, account }) {
 
             if (account && account.access_token) {
                 token.accessToken = account.access_token;
@@ -140,26 +127,10 @@ export const authOptions: NextAuthOptions = {
             return token;
         },
         async session({ session, token }) {
-            // if (token?.id) {
-            // session.user = { id: token.id, name: token.name, email: token.email }
-            // }
-
-            // console.log('token', token);
-            // console.log('session', session);
-
 
             if (token) {
                 session.accessToken = token.accessToken;
                 session.user.id = token.id;
-
-                // return {
-                //     ...session,
-                //     accessToken: token.accessToken,
-                //     user: {
-                //         ...session.user,
-                //         id: token.id
-                //     }
-                // }
             }
 
             return session;
