@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 import { getServerSession } from 'next-auth/next';
 
@@ -7,14 +7,8 @@ import { connectToDatabase } from '@/lib/database';
 
 import Task from '@/models/Task';
 
-
-export async function DELETE(request: NextRequest, { params }: { params: { taskId: string } }) {
+export async function DELETE() {
     try {
-
-        // checks if a valid taskId is provided
-        if (!params.taskId) {
-            return NextResponse.json({ message: 'Invalid taskId' }, { status: 400 });
-        }
 
         // checks if the user is logged in
         const session = await getServerSession(authOptions);
@@ -26,9 +20,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { taskI
         await connectToDatabase();
 
         // searches the database for the task, if any
-        await Task.deleteOne({ _id: params.taskId, userId: session.user.id });
+        await Task.deleteMany({ userId: session.user.id, completed: true });
 
-        return NextResponse.json({ message: 'Task deleted successfully' }, { status: 200 });
+        return NextResponse.json({ message: 'Tasks deleted successfully' }, { status: 200 });
 
     } catch (error) {
         console.log(error);

@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 
 import { authOptions } from '@/lib/auth';
-import { connectToDatabase } from '@/lib/mongoose';
+import { connectToDatabase } from '@/lib/database';
 
 import Task from '@/models/Task';
 
@@ -40,7 +40,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { taskId
             return NextResponse.json({ message: 'Task not found' }, { status: 404 });
         }
 
-        return NextResponse.json({ message: 'Task updated successfully', task: updatedTask }, { status: 200 });
+        return NextResponse.json({ message: 'Task updated successfully' }, { status: 200 });
 
     } catch (error) {
         console.log(error);

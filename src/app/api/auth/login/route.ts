@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import User from '@/models/User';
 
 
-import { connectToDatabase } from '@/lib/mongoose';
+import { connectToDatabase } from '@/lib/database';
 
 import type { LoginDetailsType } from '@/app/login/LoginForm';
 import { verifyPassword } from '@/lib/auth';

@@ -1,4 +1,4 @@
-import _mongoose, { connect } from "mongoose";
+import _mongoose, { connect, connection } from 'mongoose';
 
 declare global {
     var mongoose: {
@@ -49,4 +49,14 @@ export const connectToDatabase = async () => {
     }
 
     return cached.conn;
+}
+
+export const disconnectFromDatabase = async () => {
+    try {
+        await connection.close();
+    } catch (e) {
+        throw e;
+    } finally {
+        cached.promise = null;
+    }
 }

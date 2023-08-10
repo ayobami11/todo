@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import User from '@/models/User';
 
-import { connectToDatabase } from '@/lib/mongoose';
+import { connectToDatabase } from '@/lib/database';
 
 import type { SignupDetailsType } from '@/app/signup/SignupForm';
 import { hashPassword } from '@/lib/auth';

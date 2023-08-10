@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 
 import { authOptions } from '@/lib/auth';
-import { connectToDatabase } from '@/lib/mongoose';
+import { connectToDatabase } from '@/lib/database';
 
 import Task from '@/models/Task';
 

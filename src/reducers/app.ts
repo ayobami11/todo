@@ -19,13 +19,15 @@ type AppActions = {
     payload: { newTask: TaskType }
 } | {
     type: 'UPDATE_TASK',
-    payload: { taskId: string, updatedTask: TaskType }
+    payload: { taskId: string, newMessage: string }
 } | {
     type: 'TOGGLE_TASK_COMPLETED',
     payload: { taskId: string, message: string }
 } | {
     type: 'DELETE_TASK',
     payload: { taskId: string }
+} | {
+    type: 'DELETE_COMPLETED_TASKS'
 } | {
     type: 'SET_FILTER',
     payload: { filter: FilterType }
@@ -57,7 +59,11 @@ export const reducer = (state: AppState, action: AppActions): AppState => {
         case 'UPDATE_TASK': {
 
             const updatedTasks = state.tasks.map(task => {
-                return task._id === action.payload.taskId ? action.payload.updatedTask : task;
+                if (task._id === action.payload.taskId) {
+                    task.message = action.payload.newMessage;
+                }
+
+                return task;
             });
 
             return {
@@ -91,7 +97,17 @@ export const reducer = (state: AppState, action: AppActions): AppState => {
             }
         }
 
+        case 'DELETE_COMPLETED_TASKS': {
+            const updatedTasks = state.tasks.filter(task => !task.completed);
+
+            return {
+                ...state,
+                tasks: updatedTasks
+            }
+        }
+
         case 'SET_FILTER': {
+
             return {
                 ...state,
                 filter: action.payload.filter

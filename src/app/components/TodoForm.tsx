@@ -25,10 +25,10 @@ const TodoForm = () => {
     const sendRequest = async (url: string) => {
         return await fetch(url, {
             method: 'POST',
-            body: JSON.stringify({ message }),
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({ message })
         });
     }
 

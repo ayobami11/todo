@@ -5,11 +5,11 @@ import { NextResponse, type NextRequest } from 'next/server';
 import Task from '@/models/Task';
 
 import { authOptions } from '@/lib/auth';
-import { connectToDatabase } from '@/lib/mongoose';
+import { connectToDatabase } from '@/lib/database';
 import User from '@/models/User';
 
 
-export async function GET() {
+export async function GET(request: NextRequest) {
 
     try {
         // checks if the user is logged in
@@ -23,6 +23,10 @@ export async function GET() {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }
 
+        const { searchParams } = new URL(request.url);
+
+        const filter = searchParams.get('filter');
+
         await connectToDatabase();
 
         // checks if the user exists
@@ -33,7 +37,11 @@ export async function GET() {
         }
 
         // saves the new task to the database
-        const tasks = await Task.find({ userId: session.user.id }).select('message completed');
+        let tasks = await (filter === 'active' ?
+            Task.find({ userId: session.user.id, completed: false }) :
+            filter === 'completed' ?
+                Task.find({ userId: session.user.id, completed: true }) :
+                Task.find({ userId: session.user.id })).select('message completed');
 
         return NextResponse.json({ message: 'Tasks retrieved successfully', tasks }, { status: 200 });
 

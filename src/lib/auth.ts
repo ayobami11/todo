@@ -5,7 +5,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 import User from '@/models/User';
-import { connectToDatabase } from '@/lib/mongoose';
+import { connectToDatabase } from '@/lib/database';
 
 
 export const hashPassword = async (password: string) => {
@@ -90,12 +90,12 @@ export const authOptions: NextAuthOptions = {
                     if (existingUser) {
                         user._id = existingUser._id;
                     } else {
-                        const newUser =  new User({
+                        const newUser = new User({
                             email: profile.email,
                             name: profile.name,
                             account_type: 'google'
                         });
-                        
+
                         await newUser.save();
 
                         user._id = newUser._id;

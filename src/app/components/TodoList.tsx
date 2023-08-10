@@ -21,21 +21,46 @@ const TodoList = () => {
     const { state, dispatch } = useAppContext();
 
     const searchParams = useSearchParams();
+
     const filter = searchParams.get('filter');
 
-    const sendRequest = async (url: string) => {
+    const sendGetTasks = async (url: string) => {
         return await fetch(url);
     }
 
-    const { trigger } = useSWRMutation('/api/tasks', sendRequest);
+    const sendDeleteCompletedTasks = async (url: string) => {
+        return await fetch(url, {
+            method: 'DELETE'
+        });
+    }
+
+    const { trigger: triggerGetTasks } = useSWRMutation(`/api/tasks?filter=${filter ?? 'all'}`, sendGetTasks);
+    const {
+        trigger: triggerDeleteCompleted,
+        isMutating: isMutatingDelete
+    } = useSWRMutation('/api/tasks/deleteCompleted', sendDeleteCompletedTasks);
 
     const numberOfTasks = state.tasks.length;
+
+    const deleteCompletedTasks = () => {
+        (async () => {
+            try {
+                const response = await triggerDeleteCompleted();
+
+                if (response.ok) {
+                    dispatch({ type: 'DELETE_COMPLETED_TASKS' });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        })();
+    }
 
     useEffect(() => {
 
         const getTasks = async () => {
             try {
-                const response = await trigger();
+                const response = await triggerGetTasks();
 
                 if (response.ok) {
                     const data = await response.json();
@@ -52,7 +77,7 @@ const TodoList = () => {
             getTasks();
         }
 
-    }, [trigger, session?.user.id, dispatch]);
+    }, [triggerGetTasks, session?.user.id, dispatch, filter]);
 
 
     return (
@@ -62,7 +87,11 @@ const TodoList = () => {
             </ul>
             <footer className='flex p-4 justify-between text-dark-grayish-blue dark:text-dark-grayish-blue-alt'>
                 <p>{numberOfTasks} {numberOfTasks === 1 ? 'item' : 'items'} left</p>
-                <button className='capitalize'>Clear completed</button>
+                <button
+                    className='capitalize'
+                    disabled={isMutatingDelete}
+                    onClick={deleteCompletedTasks}
+                >Clear completed</button>
             </footer>
         </div>
     )

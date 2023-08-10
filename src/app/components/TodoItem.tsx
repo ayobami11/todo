@@ -18,28 +18,25 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
     const formRef = useRef<HTMLFormElement>(null);
 
     const [showEditInput, setShowEditInput] = useState<boolean>(false);
-    const [editInputValue, setEditInputValue] = useState<string>('');
+    const [newMessage, setNewMessage] = useState<string>('');
 
     const { dispatch } = useAppContext();
 
     const toggleEditInputVisibility = () => {
-        if (message !== editInputValue) {
-            setEditInputValue(message);
+        if (message !== newMessage) {
+            setNewMessage(message);
         }
 
         setShowEditInput(prevState => !prevState);
     }
 
     const handleEditInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setEditInputValue(event.target.value);
+        setNewMessage(event.target.value);
     }
 
     const sendDeleteRequest = async (url: string) => {
         return await fetch(url, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            method: 'DELETE'
         });
     }
 
@@ -62,14 +59,14 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
 
     const sendToggleCompletedRequest = async (url: string) => {
         return await fetch(url, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            method: 'PATCH'
         });
     }
 
-    const { trigger: triggerToggleCompletedRequest, isMutating: isMutatingToggleCompleted } = useSWRMutation(`/api/tasks/${id}/toggleCompleted`, sendToggleCompletedRequest);
+    const {
+        trigger: triggerToggleCompletedRequest,
+        isMutating: isMutatingToggleCompleted
+    } = useSWRMutation(`/api/tasks/${id}/toggleCompleted`, sendToggleCompletedRequest);
 
     const toggleCompleted = () => {
         (async () => {
@@ -89,20 +86,23 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
     const sendUpdateMessageRequest = async (url: string) => {
         return await fetch(url, {
             method: 'PATCH',
-            body: JSON.stringify({ message: editInputValue }),
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({ message: newMessage })
         });
     }
 
-    const { trigger: triggerUpdateMessageRequest, isMutating: isMutatingUpdateMessage } = useSWRMutation(`/api/tasks/${id}/editMessage`, sendUpdateMessageRequest);
+    const {
+        trigger: triggerUpdateMessageRequest,
+        isMutating: isMutatingUpdateMessage
+    } = useSWRMutation(`/api/tasks/${id}/editMessage`, sendUpdateMessageRequest);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         // removes any leading or trailing whitespace
-        setEditInputValue(prevState => prevState.trim());
+        setNewMessage(prevState => prevState.trim());
 
         const updateTask = async () => {
             try {
@@ -112,10 +112,10 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
                 const result = await response.json();
 
                 if (response.ok) {
-                    setShowEditInput(false);
-                    setEditInputValue('');
+                    dispatch({ type: 'UPDATE_TASK', payload: { taskId: id, newMessage } });
 
-                    dispatch({ type: 'UPDATE_TASK', payload: { taskId: id, updatedTask: result.task } });
+                    setShowEditInput(false);
+                    setNewMessage('');
                 }
 
                 console.log(result);
@@ -182,11 +182,11 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
                         <input
                             type='text'
                             name='message'
-                            value={editInputValue}
+                            value={newMessage}
                             required
                             onChange={handleEditInputChange}
                         />
-                        <button type='submit' disabled={(message === editInputValue) || isMutatingUpdateMessage}>Save</button>
+                        <button type='submit' disabled={(message === newMessage) || isMutatingUpdateMessage}>Save</button>
                     </form>
                 ) : null
             }
