@@ -9,7 +9,7 @@ export default async function Home() {
   return (
     <>
       <Header />
-      <main className='w-11/12 max-w-4xl'>
+      <main className='w-11/12 max-w-4xl mx-auto'>
         <div>
           <TodoForm />
           <TodoList />

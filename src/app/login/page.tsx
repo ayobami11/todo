@@ -10,12 +10,16 @@ import LoginForm from '@/app/login/LoginForm';
 
 const Login = () => {
     return (
-        <main>
-            <LoginForm />
-            <p>
-                Don&apos;t have an account?
-                <Link href='/signup'>Sign up</Link>
-            </p>
+        <main className='text-very-dark-grayish-blue dark:text-light-grayish-blue'>
+            <div className='w-5/6 max-w-xl mx-auto mt-24'>
+                <h2 className='font-bold text-4xl mb-10'>Login</h2>
+
+                <LoginForm />
+                <p className='text-center'>
+                    Don&apos;t have an account?
+                    <Link href='/signup' className='text-bright-blue ml-2 hover:underline'>Sign up</Link>
+                </p>
+            </div>
         </main>
     )
 }

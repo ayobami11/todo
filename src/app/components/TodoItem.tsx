@@ -4,18 +4,21 @@ import Image from 'next/image';
 
 import useSWRMutation from 'swr/mutation';
 
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { TaskType } from '@/reducers/app';
 
 import { useAppContext } from '@/contexts/app';
 
+import editIcon from '../../../public/assets/images/icon-edit.svg';
+import minimizeIcon from '../../../public/assets/images/icon-minimize.svg';
 import crossIcon from '../../../public/assets/images/icon-cross.svg';
 import checkIcon from '../../../public/assets/images/icon-check.svg';
 
 const TodoItem = ({ _id: id, message, completed }: TaskType) => {
 
     const formRef = useRef<HTMLFormElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const [showEditInput, setShowEditInput] = useState<boolean>(false);
     const [newMessage, setNewMessage] = useState<string>('');
@@ -104,6 +107,7 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
         // removes any leading or trailing whitespace
         setNewMessage(prevState => prevState.trim());
 
+
         const updateTask = async () => {
             try {
 
@@ -125,16 +129,23 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
             }
         }
 
-        if (message) {
+        formRef.current?.reportValidity();
+
+        if (message && message !== newMessage) {
             updateTask();
-        } else {
-            formRef.current?.reportValidity();
         }
+
     }
+
+    useEffect(() => {
+        if (showEditInput) {
+            inputRef.current?.focus();
+        }
+    }, [showEditInput]);
 
     return (
         <li className={
-            `group/item flex justify-between p-4 border-b-2 text-dark-grayish-blue dark:text-light-grayish-blue 
+            `group/item flex flex-wrap gap-4 justify-between p-4 border-b-2 text-dark-grayish-blue dark:text-light-grayish-blue 
             border-very-light-grayish-blue dark:border-very-dark-grayish-blue-alt hover:text-very-dark-grayish-blue 
             dark:hover:text-light-grayish-blue-alt`
         }>
@@ -150,7 +161,7 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
                 />
                 <label htmlFor={`task-${id}`}
                     className={
-                        `group/label grid place-items-center grid-cols-1 relative w-6 aspect-square cursor-pointer rounded-full 
+                        `group/label shrink-0 grid place-items-center grid-cols-1 relative w-6 aspect-square cursor-pointer rounded-full 
                         bg-gradient-to-r from-check-background-start to-check-background-stop peer-checked:border-none hover:border-none
                         focus:border-none border-2 border-light-grayish-blue dark:border-very-dark-grayish-blue`
                     }>
@@ -169,24 +180,54 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
                     className='peer-checked:text-light-grayish-blue dark:peer-checked:text-very-dark-grayish-blue peer-checked:line-through hover:cursor-pointer'>{message}</label>
             </div>
 
-            <button onClick={toggleEditInputVisibility}>{showEditInput ? 'Hide' : 'Edit'}</button>
-            <button className='opacity-0 group-hover/item:opacity-100 focus:opacity-100' disabled={isMutatingDelete} onClick={deleteTask}>
-                <Image
-                    src={crossIcon}
-                    alt='Close icon'
-                />
-            </button>
+            <div className={`ml-auto flex gap-x-5`}>
+                <button
+                    className={`${!showEditInput ? 'md:opacity-0 md:group-hover/item:opacity-100 md:focus:opacity-100' : ''}`}
+                    title={showEditInput ? 'Hide' : 'Edit'}
+                    onClick={toggleEditInputVisibility}
+                >
+                    {showEditInput ?
+                        <Image
+                            src={minimizeIcon}
+                            alt='Minimize icon'
+                        /> :
+                        <Image
+                            src={editIcon}
+                            alt='Edit icon'
+                        />
+                    }
+                </button>
+                <button
+                    className={`${!showEditInput ? 'md:opacity-0 md:group-hover/item:opacity-100 md:focus:opacity-100' : ''}`}
+                    disabled={isMutatingDelete}
+                    title='Delete'
+                    onClick={deleteTask}
+                >
+                    <Image
+                        src={crossIcon}
+                        alt='Close icon'
+                    />
+                </button>
+            </div>
             {
                 showEditInput ? (
-                    <form onSubmit={handleSubmit}>
+                    <form ref={formRef} className='basis-full flex gap-x-3' onSubmit={handleSubmit}>
                         <input
+                            className={
+                                `grow bg-transparent px-3 py-2 text-dark-grayish-blue dark:text-light-grayish-blue shadow-sm border 
+                            border-slate-300 rounded-md focus:outline-none focus:border-bright-blue focus:ring-1 focus:ring-bright-blue invalid:caret-pink-500
+                            invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-600`
+                            }
                             type='text'
                             name='message'
                             value={newMessage}
+                            ref={inputRef}
                             required
                             onChange={handleEditInputChange}
                         />
-                        <button type='submit' disabled={(message === newMessage) || isMutatingUpdateMessage}>Save</button>
+                        <button
+                            className='text-very-light-gray bg-gradient-to-r from-cyan-500 to-blue-500 hover:enabled:bg-gradient-to-l font-medium px-4 rounded-md focus:outline-none focus:blue disabled:cursor-not-allowed disabled:opacity-75'
+                            type='submit' disabled={!newMessage || (message === newMessage) || isMutatingUpdateMessage}>Save</button>
                     </form>
                 ) : null
             }

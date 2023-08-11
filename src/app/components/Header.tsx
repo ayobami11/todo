@@ -43,14 +43,14 @@ const Header = () => {
      Source: https://github.com/pacocoursey/next-themes#avoid-hydration-mismatch
      */
     return (
-        <header>
-            <div className='fixed overflow-hidden -z-10 w-full'>
+        <header className='w-11/12 max-w-4xl mx-auto'>
+            <div className='fixed top-0 left-0 overflow-hidden -z-10 w-full'>
                 <Image className='w-full max-h-44 dark:hidden md:hidden' src={bgMobileLight} alt='' placeholder='blur' priority />
                 <Image className='w-full max-h-44 hidden dark:block md:dark:hidden' src={bgMobileDark} alt='' placeholder='blur' priority />
                 <Image className='w-full hidden dark:hidden md:block' src={bgDesktopLight} alt='' placeholder='blur' priority />
                 <Image className='w-full hidden md:dark:block' src={bgDesktopDark} alt='' placeholder='blur' priority />
             </div>
-            <div className='flex justify-between items-center w-11/12 max-w-4xl'>
+            <div className='flex justify-between items-center my-8'>
                 <h1 className='uppercase font-bold text-2xl text-very-light-gray tracking-[0.5em]'>Todo</h1>
                 <button onClick={toggleTheme}>
                     {
@@ -61,7 +61,7 @@ const Header = () => {
                 </button>
             </div>
 
-            <button onClick={handleSignOut}>Sign out</button>
+            <button className='text-very-light-gray' onClick={handleSignOut}>Sign out</button>
         </header>
     )
 }

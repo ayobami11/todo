@@ -31,6 +31,7 @@ const schema = new Schema<IUser, UserModel, IUserMethods>({
     password: {
         type: String,
         // password is required only for 'credentials' accounts
+        // @ts-ignore noImplicitThis
         required: [function (): boolean { return this.account_type === 'credentials' }, 'Password is required'],
         minlength: [8, 'Password must be at least 8 characters long, got {VALUE}']
         // don't set a maxlength for password because it is going to be salted

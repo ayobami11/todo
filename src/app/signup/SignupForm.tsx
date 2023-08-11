@@ -95,38 +95,52 @@ const SignupForm = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div>
+            <div className='flex flex-col-reverse gap-1 mb-7'>
                 <input
+                    className={
+                        `peer grow bg-transparent px-3 py-2 shadow-sm border 
+                            border-slate-300 rounded-md focus:outline-none focus:border-bright-blue focus:ring-1 focus:ring-bright-blue`
+                    }
                     type='email'
                     id='email'
                     name='email'
                     value={formDetails.email}
+                    placeholder='johndoe@example.com'
                     maxLength={30}
                     onChange={handleInputChange}
                     required
                 />
-                <label htmlFor='email'>
+                <label className='peer-focus:text-bright-blue' htmlFor='email'>
                     Email
                     <span className='after:content-["*"] after:ml-1 after:text-red-500 font-medium'></span>
                 </label>
             </div>
-            <div>
+            <div className='flex flex-col-reverse gap-1 mb-7'>
                 <input
+                    className={
+                        `peer grow bg-transparent px-3 py-2 shadow-sm border 
+                            border-slate-300 rounded-md focus:outline-none focus:border-bright-blue focus:ring-1 focus:ring-bright-blue`
+                    }
                     type='text'
                     id='name'
                     name='name'
                     value={formDetails.name}
+                    placeholder='John Doe'
                     maxLength={30}
                     onChange={handleInputChange}
                     required
                 />
-                <label htmlFor='name'>
+                <label className='peer-focus:text-bright-blue' htmlFor='name'>
                     Name
                     <span className='after:content-["*"] after:ml-1 after:text-red-500 font-medium'></span>
                 </label>
             </div>
-            <div>
+            <div className='flex flex-col-reverse gap-1 mb-7'>
                 <input
+                    className={
+                        `peer grow bg-transparent px-3 py-2 shadow-sm border 
+                            border-slate-300 rounded-md focus:outline-none focus:border-bright-blue focus:ring-1 focus:ring-bright-blue`
+                    }
                     type='password'
                     id='password'
                     name='password'
@@ -136,12 +150,12 @@ const SignupForm = () => {
                     onChange={handleInputChange}
                     required
                 />
-                <label htmlFor='password'>
+                <label className='peer-focus:text-bright-blue' htmlFor='password'>
                     Password
                     <span className='after:content-["*"] after:ml-1 after:text-red-500 font-medium'></span>
                 </label>
             </div>
-            <button type='submit' disabled={isMutating}>Register</button>
+            <button type='submit' disabled={isMutating} className='bg-bright-blue py-2 px-4 mt-3 rounded-md text-very-light-gray'>Sign Up</button>
         </form>
     );
 }

@@ -77,12 +77,12 @@ const TodoList = () => {
     return (
         <div className='bg-very-light-gray dark:bg-very-dark-desaturated-blue rounded-md'>
             <ul>
-                {state.tasks.map(task => <TodoItem key={task._id} {...task} />)}
+                {tasks.map(task => <TodoItem key={task._id} {...task} />)}
             </ul>
             <footer className='flex p-4 justify-between text-dark-grayish-blue dark:text-dark-grayish-blue-alt'>
-                <p>{numberOfTasks} {numberOfTasks === 1 ? 'item' : 'items'} left</p>
+                <p className='font-bold'>{numberOfTasks} {numberOfTasks === 1 ? 'item' : 'items'} left</p>
                 <button
-                    className='capitalize'
+                    className='capitalize font-bold hover:text-very-dark-grayish-blue dark:hover:text-light-grayish-blue-alt focus:text-very-dark-grayish-blue dark:focus:text-light-grayish-blue-alt focus:outline-none'
                     disabled={isMutatingDelete}
                     onClick={deleteCompletedTasks}
                 >Clear completed</button>
