@@ -4,6 +4,8 @@ import Image from 'next/image';
 
 import { useTheme } from 'next-themes';
 
+import { signOut } from 'next-auth/react';
+
 import { useState, useEffect } from 'react';
 
 import sunIcon from '../../../public/assets/images/icon-sun.svg';
@@ -27,6 +29,10 @@ const Header = () => {
 
     const toggleTheme = () => {
         setTheme(theme === 'dark' ? 'light' : 'dark');
+    }
+
+    const handleSignOut = () => {
+        signOut();
     }
 
     if (!isMounted) return null;
@@ -54,6 +60,8 @@ const Header = () => {
                     }
                 </button>
             </div>
+
+            <button onClick={handleSignOut}>Sign out</button>
         </header>
     )
 }

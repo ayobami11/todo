@@ -108,9 +108,13 @@ export const reducer = (state: AppState, action: AppActions): AppState => {
 
         case 'SET_FILTER': {
 
+            const validFilters = ['all', 'active', 'completed'];
+
+            const filter = validFilters.includes(action.payload.filter) ? action.payload.filter : 'all';
+
             return {
                 ...state,
-                filter: action.payload.filter
+                filter
             }
         }
 

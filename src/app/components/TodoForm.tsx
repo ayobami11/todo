@@ -71,7 +71,7 @@ const TodoForm = () => {
     return (
         <form ref={formRef} onSubmit={handleSubmit} className='bg-very-light-gray dark:bg-very-dark-desaturated-blue w-full rounded-lg p-4 mb-5'>
             <input
-                className='text-very-dark-grayish-blue dark:text-light-grayish-blue bg-transparent w-full placeholder:text-light-grayish-blue dark:placeholder:text-very-dark-grayish-blue focus:outline-none'
+                className='text-very-dark-grayish-blue dark:text-light-grayish-blue bg-transparent w-full autofill:bg-red-500 placeholder:text-light-grayish-blue dark:placeholder:text-very-dark-grayish-blue focus:outline-none'
                 type='text'
                 name='message'
                 id='message'

@@ -2,8 +2,6 @@
 
 import { useEffect } from 'react';
 
-import { useSearchParams } from 'next/navigation';
-
 import { useSession } from 'next-auth/react';
 
 import useSWRMutation from 'swr/mutation';
@@ -20,10 +18,6 @@ const TodoList = () => {
 
     const { state, dispatch } = useAppContext();
 
-    const searchParams = useSearchParams();
-
-    const filter = searchParams.get('filter');
-
     const sendGetTasks = async (url: string) => {
         return await fetch(url);
     }
@@ -34,7 +28,7 @@ const TodoList = () => {
         });
     }
 
-    const { trigger: triggerGetTasks } = useSWRMutation(`/api/tasks?filter=${filter ?? 'all'}`, sendGetTasks);
+    const { trigger: triggerGetTasks } = useSWRMutation(`/api/tasks?filter=${state.filter}`, sendGetTasks);
     const {
         trigger: triggerDeleteCompleted,
         isMutating: isMutatingDelete
@@ -77,7 +71,7 @@ const TodoList = () => {
             getTasks();
         }
 
-    }, [triggerGetTasks, session?.user.id, dispatch, filter]);
+    }, [triggerGetTasks, session?.user.id, dispatch, state.filter]);
 
 
     return (

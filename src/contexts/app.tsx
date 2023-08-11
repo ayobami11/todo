@@ -20,7 +20,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
     return (
         <AppContext.Provider value={{ state, dispatch }}>
             <SessionProvider>
-                <ThemeProvider attribute='class'>
+                <ThemeProvider attribute='class' enableSystem={true}>
                     {children}
                 </ThemeProvider>
             </SessionProvider>

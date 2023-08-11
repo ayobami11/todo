@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { signIn, getProviders } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 
 
 export interface LoginDetailsType {
@@ -17,8 +17,6 @@ const LoginForm = () => {
     const formRef = useRef<HTMLFormElement>(null);
 
     const router = useRouter();
-
-    const providers = async () => await getProviders();
 
     const searchParams = useSearchParams();
 
