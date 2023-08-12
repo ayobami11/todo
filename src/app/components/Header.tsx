@@ -35,7 +35,7 @@ const Header = () => {
         signOut();
     }
 
-    if (!isMounted) return null;
+    if (!isMounted) return 'Loading';
 
     /* renders the component only when the component is mounted
      so as to avoid hydration mismatch
@@ -51,7 +51,7 @@ const Header = () => {
                 <Image className='w-full hidden md:dark:block' src={bgDesktopDark} alt='' placeholder='blur' priority />
             </div>
             <div className='flex justify-between items-center my-8'>
-                <h1 className='uppercase font-bold text-2xl text-very-light-gray tracking-[0.5em]'>Todo</h1>
+                <h1 className='uppercase font-bold text-2xl md:text-3xl lg:text-4xl text-very-light-gray tracking-[0.5em]'>Todo</h1>
                 <button onClick={toggleTheme}>
                     {
                         theme === 'dark' ?
@@ -61,7 +61,7 @@ const Header = () => {
                 </button>
             </div>
 
-            <button className='text-very-light-gray' onClick={handleSignOut}>Sign out</button>
+            <button className='text-very-light-gray block ml-auto my-6 hover:underline' onClick={handleSignOut}>Sign out</button>
         </header>
     )
 }

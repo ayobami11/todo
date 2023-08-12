@@ -27,8 +27,8 @@ module.exports = {
         // Dark Theme
         'very-dark-blue': 'hsl(235, 21%, 11%)',
         'very-dark-desaturated-blue': 'hsl(235, 24%, 19%)',
-        'light-grayish-blue': 'hsl(234, 39%, 85%)',
-        'light-grayish-blue-alt': 'hsl(236, 33%, 92%)', // hover
+        'light-grayish-blue-alt-1': 'hsl(234, 39%, 85%)',
+        'light-grayish-blue-alt-2': 'hsl(236, 33%, 92%)', // hover
         'dark-grayish-blue-alt': 'hsl(234, 11%, 52%)',
         'very-dark-grayish-blue': 'hsl(233, 14%, 35%)',
         'very-dark-grayish-blue-alt': 'hsl(237, 14%, 26%)',

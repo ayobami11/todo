@@ -79,7 +79,7 @@ const TodoForm = () => {
             onSubmit={handleSubmit}
             className='flex flex-row-reverse items-center gap-5 bg-very-light-gray dark:bg-very-dark-desaturated-blue w-full rounded-lg p-4 mb-5'>
             <input
-                className='text-very-dark-grayish-blue dark:text-light-grayish-blue bg-transparent w-full autofill:bg-red-500 placeholder:text-light-grayish-blue dark:placeholder:text-very-dark-grayish-blue focus:outline-none'
+                className='text-very-dark-grayish-blue dark:text-light-grayish-blue-alt-1 bg-transparent w-full autofill:bg-red-500 placeholder:text-light-grayish-blue-alt-1 dark:placeholder:text-very-dark-grayish-blue focus:outline-none'
                 type='text'
                 name='message'
                 id='message'
@@ -93,14 +93,15 @@ const TodoForm = () => {
                 disabled={isMutating}
                 title='Submit'
                 className={
-                    `group flex justify-center items-center w-8 aspect-square border-2 rounded-full border-light-grayish-blue dark:border-very-dark-grayish-blue
-                    hover:bg-gradient-to-r focus:bg-gradient-to-r from-check-background-start to-check-background-stop focus:outline-none focus:border-transparent`
+                    `group flex justify-center items-center w-8 aspect-square border-2 rounded-full border-light-grayish-blue-alt-1 dark:border-very-dark-grayish-blue
+                    hover:bg-gradient-to-r focus:bg-gradient-to-r from-check-background-start to-check-background-stop focus:outline-none hover:border-none focus:border-none active:scale-90`
                 }>
                 <Image
                     className='hidden group-hover:block group-focus:block'
                     src={checkIcon}
                     alt='Check icon'
                 />
+                <span className='sr-only'>Submit</span>
             </button>
         </form>
     )

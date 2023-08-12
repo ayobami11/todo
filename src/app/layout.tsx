@@ -8,7 +8,7 @@ const josefinSans = Josefin_Sans({
   weight: ['400', '700'],
   variable: '--font-josefin-sans',
   fallback: ['sans-serif']
-})
+});
 
 import './globals.css';
 
@@ -33,7 +33,7 @@ export default function RootLayout({
 
   return (
     <html lang='en' className={`${josefinSans.variable}`} suppressHydrationWarning>
-      <body className='font-primary text-lg dark:bg-very-dark-blue'>
+      <body className='font-primary text-lg bg-very-light-grayish-blue dark:bg-very-dark-blue'>
         <AppContextProvider>
           {children}
         </AppContextProvider>

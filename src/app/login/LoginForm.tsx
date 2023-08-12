@@ -142,7 +142,7 @@ const LoginForm = () => {
                 <span className='flex-shrink'>or</span>
                 <span className='flex-grow h-px bg-gray-400'></span>
             </div>
-            <button className='flex items-center gap-4 my-8 mx-auto' onClick={() => signIn('google', {
+            <button className='flex items-center gap-4 my-8 mx-auto border border-slate-300 rounded-md py-3 px-8 shadow-md transition-transform hover:scale-105 hover:border-2 active:scale-100 motion-reduce:transition-none motion-reduce:transform-none' onClick={() => signIn('google', {
                 callbackUrl: '/'
             })}>
                 <Image src={googleIcon} alt='Google icon' />

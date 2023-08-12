@@ -15,7 +15,7 @@ const Login = () => {
                 <h2 className='font-bold text-4xl mb-10'>Login</h2>
 
                 <LoginForm />
-                <p className='text-center'>
+                <p className='text-center my-8'>
                     Don&apos;t have an account?
                     <Link href='/signup' className='text-bright-blue ml-2 hover:underline'>Sign up</Link>
                 </p>

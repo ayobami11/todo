@@ -144,10 +144,10 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
     }, [showEditInput]);
 
     return (
-        <li className={
-            `group/item flex flex-wrap gap-4 justify-between p-4 border-b-2 text-dark-grayish-blue dark:text-light-grayish-blue 
+        <div className={
+            `group/item flex flex-wrap gap-4 justify-between p-4 border-b-2 text-dark-grayish-blue dark:text-light-grayish-blue-alt-1 
             border-very-light-grayish-blue dark:border-very-dark-grayish-blue-alt hover:text-very-dark-grayish-blue 
-            dark:hover:text-light-grayish-blue-alt`
+            dark:hover:text-light-grayish-blue-alt-2`
         }>
             <div className='flex items-center gap-2'>
                 <input
@@ -214,7 +214,7 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
                     <form ref={formRef} className='basis-full flex gap-x-3' onSubmit={handleSubmit}>
                         <input
                             className={
-                                `grow bg-transparent px-3 py-2 text-dark-grayish-blue dark:text-light-grayish-blue shadow-sm border 
+                                `grow bg-transparent px-3 py-2 text-dark-grayish-blue dark:text-light-grayish-blue-alt-1 shadow-sm border 
                             border-slate-300 rounded-md focus:outline-none focus:border-bright-blue focus:ring-1 focus:ring-bright-blue invalid:caret-pink-500
                             invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-600`
                             }
@@ -231,7 +231,7 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
                     </form>
                 ) : null
             }
-        </li>
+        </div>
     )
 }
 

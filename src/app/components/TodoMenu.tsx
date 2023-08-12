@@ -38,7 +38,7 @@ const TodoMenu = () => {
           checked={state.filter === 'all'}
           onChange={setFilter}
         />
-        <label className={`cursor-pointer hover:text-very-dark-grayish-blue dark:hover:text-light-grayish-blue-alt ${state.filter === 'all' ? 'text-bright-blue' : ''}`} htmlFor='filter-all'>All</label>
+        <label className={`cursor-pointer hover:text-very-dark-grayish-blue dark:hover:text-light-grayish-blue-alt-2 ${state.filter === 'all' ? 'text-bright-blue' : ''}`} htmlFor='filter-all'>All</label>
       </li>
       <li>
         <input
@@ -50,7 +50,7 @@ const TodoMenu = () => {
           checked={state.filter === 'active'}
           onChange={setFilter}
         />
-        <label className={`cursor-pointer hover:text-very-dark-grayish-blue dark:hover:text-light-grayish-blue-alt ${state.filter === 'active' ? 'text-bright-blue' : ''}`} htmlFor='filter-active'>Active</label>
+        <label className={`cursor-pointer hover:text-very-dark-grayish-blue dark:hover:text-light-grayish-blue-alt-2 ${state.filter === 'active' ? 'text-bright-blue' : ''}`} htmlFor='filter-active'>Active</label>
       </li>
       <li>
         <input
@@ -62,7 +62,7 @@ const TodoMenu = () => {
           checked={state.filter === 'completed'}
           onChange={setFilter}
         />
-        <label className={`cursor-pointer hover:text-very-dark-grayish-blue dark:hover:text-light-grayish-blue-alt ${state.filter === 'completed' ? 'text-bright-blue' : ''}`} htmlFor='filter-completed'>Completed</label>
+        <label className={`cursor-pointer hover:text-very-dark-grayish-blue dark:hover:text-light-grayish-blue-alt-2 ${state.filter === 'completed' ? 'text-bright-blue' : ''}`} htmlFor='filter-completed'>Completed</label>
       </li>
     </menu>
   )
