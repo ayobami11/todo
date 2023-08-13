@@ -1,14 +1,11 @@
 import { NextResponse } from 'next/server';
 
-import jwt from 'jsonwebtoken';
+import { connectToDatabase, disconnectFromDatabase } from '@/lib/database';
+import { verifyPassword } from '@/lib/auth';
 
 import User from '@/models/User';
 
-
-import { connectToDatabase } from '@/lib/database';
-
 import type { LoginDetailsType } from '@/app/login/LoginForm';
-import { verifyPassword } from '@/lib/auth';
 
 export async function POST(request: Request) {
 
@@ -51,8 +48,10 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ message: 'Login was successful', user }, { status: 200 });
     } catch (error) {
-
         console.log(error);
+
         return NextResponse.json({ message: 'Something went wrong. Please try again' }, { status: 500 });
+    } finally {
+        await disconnectFromDatabase();
     }
 }

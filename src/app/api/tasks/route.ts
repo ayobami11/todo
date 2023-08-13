@@ -1,12 +1,12 @@
-import { getServerSession } from 'next-auth/next';
-
 import { NextResponse, type NextRequest } from 'next/server';
 
-import Task from '@/models/Task';
+import { getServerSession } from 'next-auth/next';
 
+import { connectToDatabase, disconnectFromDatabase } from '@/lib/database';
 import { authOptions } from '@/lib/auth';
-import { connectToDatabase } from '@/lib/database';
+
 import User from '@/models/User';
+import Task from '@/models/Task';
 
 
 export async function GET(request: NextRequest) {
@@ -49,6 +49,8 @@ export async function GET(request: NextRequest) {
         console.log(error);
 
         return NextResponse.json({ message: 'Something went wrong. Please try again' }, { status: 500 });
+    } finally {
+        await disconnectFromDatabase();
     }
 
 }
@@ -92,6 +94,8 @@ export async function POST(request: NextRequest) {
         console.log(error);
 
         return NextResponse.json({ message: 'Something went wrong. Please try again' }, { status: 500 });
+    } finally {
+        await disconnectFromDatabase();
     }
 
 }

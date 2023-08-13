@@ -2,11 +2,10 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 import { getServerSession } from 'next-auth/next';
 
+import { connectToDatabase, disconnectFromDatabase } from '@/lib/database';
 import { authOptions } from '@/lib/auth';
-import { connectToDatabase } from '@/lib/database';
 
 import Task from '@/models/Task';
-
 
 export async function PATCH(request: NextRequest, { params }: { params: { taskId: string } }) {
     try {
@@ -35,5 +34,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { taskId
 
     } catch (error) {
         console.log(error);
+
+        return NextResponse.json({ message: 'Something went wrong. Please try again' }, { status: 500 });
+    } finally {
+        await disconnectFromDatabase();
     }
 }

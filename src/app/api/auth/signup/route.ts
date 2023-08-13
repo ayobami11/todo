@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 
+import { connectToDatabase, disconnectFromDatabase } from '@/lib/database';
+import { hashPassword } from '@/lib/auth';
+
 import User from '@/models/User';
 
-import { connectToDatabase } from '@/lib/database';
-
 import type { SignupDetailsType } from '@/app/signup/SignupForm';
-import { hashPassword } from '@/lib/auth';
 
 export async function POST(request: Request) {
 
@@ -45,8 +45,10 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ message: 'Signup was successful' }, { status: 201 });
     } catch (error) {
-
         console.log(error);
+
         return NextResponse.json({ message: 'Something went wrong. Please try again' }, { status: 500 });
+    } finally {
+        await disconnectFromDatabase();
     }
 }

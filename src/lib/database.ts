@@ -57,6 +57,7 @@ export const disconnectFromDatabase = async () => {
     } catch (e) {
         throw e;
     } finally {
+        cached.conn = null;
         cached.promise = null;
     }
 }
