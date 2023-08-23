@@ -32,7 +32,10 @@ export async function POST(request: Request) {
         await connectToDatabase();
 
         // checks if the email has already been taken
-        const user = await User.findOne({ email: data.email });
+        const user = await User.findOne({
+            email: data.email,
+            account_provider: 'credentials'
+        });
 
         if (!user) {
             return NextResponse.json({ message: 'Invalid credentials' }, { status: 400 });

@@ -29,8 +29,10 @@ export async function POST(request: Request) {
         await connectToDatabase();
 
         // checks if the email has already been taken
-        const existingUser = await User.findOne({ email: data.email });
-        console.log(existingUser)
+        const existingUser = await User.findOne({
+            email: data.email,
+            account_provider: 'credentials'
+        });
 
         if (existingUser) {
             return NextResponse.json({ message: 'User already exists' }, { status: 422 });
@@ -39,7 +41,12 @@ export async function POST(request: Request) {
         // if the name has not been taken, a new user is created
         const hashedPassword = await hashPassword(data.password);
 
-        const newUser = new User({ email: data.email, name: data.name, password: hashedPassword, account_type: 'credentials' });
+        const newUser = new User({
+            email: data.email,
+            name: data.name,
+            password: hashedPassword,
+            account_provider: 'credentials'
+        });
 
         await newUser.save();
 

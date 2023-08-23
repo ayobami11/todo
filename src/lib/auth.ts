@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 
 import type { NextAuthOptions } from 'next-auth';
+import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -23,6 +24,10 @@ export const authOptions: NextAuthOptions = {
         signIn: '/login'
     },
     providers: [
+        GithubProvider({
+            clientId: process.env.GITHUB_CLIENT_ID as string,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+        }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
@@ -77,7 +82,7 @@ export const authOptions: NextAuthOptions = {
 
             try {
 
-                if (account?.provider === 'google') {
+                if (account?.provider === 'google' || account?.provider === 'github') {
 
                     if (!profile?.email) {
                         throw new Error('Email was not provided');
@@ -85,15 +90,20 @@ export const authOptions: NextAuthOptions = {
 
                     await connectToDatabase();
 
-                    const existingUser = await User.findOne({ email: profile.email });
+                    // checks if user already exists
+                    const existingUser = await User.findOne({ 
+                        email: profile.email,
+                        account_provider: account.provider 
+                    });
 
                     if (existingUser) {
                         user._id = existingUser._id;
                     } else {
+                        // if user doesn't exist, a new user is created
                         const newUser = new User({
                             email: profile.email,
                             name: profile.name,
-                            account_type: 'google'
+                            account_provider: account.provider
                         });
 
                         await newUser.save();
@@ -117,9 +127,11 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user, account }) {
 
             if (account && account.access_token) {
+                // for google and github providers
                 token.accessToken = account.access_token;
                 token.id = user._id;
             } else if (user && user.access_token) {
+                // for credentials provider
                 token.accessToken = user.access_token;
                 token.id = user._id;
             }

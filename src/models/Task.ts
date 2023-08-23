@@ -13,7 +13,8 @@ const TaskSchema = new mongoose.Schema<ITask>({
     },
     message: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     completed: {
         type: Boolean,
