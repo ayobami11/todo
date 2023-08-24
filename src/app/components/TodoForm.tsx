@@ -56,13 +56,30 @@ const TodoForm = () => {
                 if (response.ok) {
                     setMessage('');
 
-                    dispatch({ type: 'ADD_TASK', payload: { newTask: result.task } });
-                }
+                    dispatch({
+                        type: 'ADD_TASK',
+                        payload: {
+                            newTask: result.task
+                        }
+                    });
 
-                console.log(result);
+                    dispatch({
+                        type: 'ADD_TOAST',
+                        payload: {
+                            message: 'Task added successfully.'
+                        }
+                    });
+                }
 
             } catch (error) {
                 console.log(error);
+
+                dispatch({
+                    type: 'ADD_TOAST',
+                    payload: {
+                        message: 'Something went wrong. Please try again.'
+                    }
+                });
             }
         }
 

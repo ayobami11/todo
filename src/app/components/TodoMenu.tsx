@@ -23,7 +23,12 @@ const TodoMenu = () => {
   }
 
   useEffect(() => {
-    dispatch({ type: 'SET_FILTER', payload: { filter } });
+    dispatch({
+      type: 'SET_FILTER',
+      payload: {
+        filter
+      }
+    });
   }, [dispatch, filter]);
 
   return (

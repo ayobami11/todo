@@ -4,6 +4,8 @@ import { useState, useRef } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { useAppContext } from '@/contexts/app';
+
 import useSWRMutation from 'swr/mutation';
 
 export interface SignupDetailsType {
@@ -15,9 +17,11 @@ export interface SignupDetailsType {
 
 const SignupForm = () => {
 
+    const { state, dispatch } = useAppContext();
+
     const formRef = useRef<HTMLFormElement>(null);
 
-    const router =  useRouter();
+    const router = useRouter();
 
     const [formDetails, setFormDetails] = useState<SignupDetailsType>({
         email: '',
@@ -79,11 +83,35 @@ const SignupForm = () => {
             try {
                 const response = await trigger(formDetails);
 
-                if (response.ok) {
+                const result = await response.json();
+
+                if (response.status === 201) {
                     router.push('/login');
+                } else if (response.status === 400) {
+                    dispatch({
+                        type: 'ADD_TOAST',
+                        payload: {
+                            message: result.message
+                        }
+                    });
+                } else if (response.status === 422) {
+                    dispatch({
+                        type: 'ADD_TOAST',
+                        payload: {
+                            message: 'Email is already taken.'
+                        }
+                    });
+                } else {
+                    dispatch({
+                        type: 'ADD_TOAST',
+                        payload: {
+                            message: 'Something went wrong. Please try again.'
+                        }
+                    });
                 }
 
             } catch (error) {
+
                 console.log(error);
             }
         }

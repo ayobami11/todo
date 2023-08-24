@@ -51,11 +51,30 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
                 const response = await triggerDeleteRequest();
 
                 if (response.ok) {
-                    dispatch({ type: 'DELETE_TASK', payload: { taskId: id } });
+                    dispatch({
+                        type: 'DELETE_TASK',
+                        payload: {
+                            taskId: id
+                        }
+                    });
+
+                    dispatch({
+                        type: 'ADD_TOAST',
+                        payload: {
+                            message: 'Task deleted successfully.'
+                        }
+                    });
                 }
 
             } catch (error) {
                 console.log(error);
+
+                dispatch({
+                    type: 'ADD_TOAST',
+                    payload: {
+                        message: 'Task deletion was unsuccessful. Please try again.'
+                    }
+                });
             }
         })();
     }
@@ -77,11 +96,30 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
                 const response = await triggerToggleCompletedRequest();
 
                 if (response.ok) {
-                    dispatch({ type: 'TOGGLE_TASK_COMPLETED', payload: { taskId: id } });
+                    dispatch({
+                        type: 'TOGGLE_TASK_COMPLETED',
+                        payload: {
+                            taskId: id
+                        }
+                    });
+
+                    dispatch({
+                        type: 'ADD_TOAST',
+                        payload: {
+                            message: 'Task updated successfully.'
+                        }
+                    });
                 }
 
             } catch (error) {
                 console.log(error);
+
+                dispatch({
+                    type: 'ADD_TOAST',
+                    payload: {
+                        message: 'Task update was unsuccessful. Please try again.'
+                    }
+                });
             }
         })();
     }
@@ -113,19 +151,36 @@ const TodoItem = ({ _id: id, message, completed }: TaskType) => {
 
                 const response = await triggerUpdateMessageRequest();
 
-                const result = await response.json();
+                await response.json();
 
                 if (response.ok) {
-                    dispatch({ type: 'UPDATE_TASK', payload: { taskId: id, newMessage } });
+                    dispatch({
+                        type: 'UPDATE_TASK',
+                        payload: {
+                            taskId: id, newMessage
+                        }
+                    });
 
                     setShowEditInput(false);
                     setNewMessage('');
-                }
 
-                console.log(result);
+                    dispatch({
+                        type: 'ADD_TOAST',
+                        payload: {
+                            message: 'Task updated successfully.'
+                        }
+                    });
+                }
 
             } catch (error) {
                 console.log(error);
+
+                dispatch({
+                    type: 'ADD_TOAST',
+                    payload: {
+                        message: 'Task update was unsuccessful. Please try again.'
+                    }
+                });
             }
         }
 

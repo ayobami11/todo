@@ -1,4 +1,9 @@
-type FilterType = 'all' | 'active' | 'completed';
+import { v4 as uuidv4 } from 'uuid';
+
+export interface ToastType {
+    id: string,
+    message: string
+}
 
 export interface TaskType {
     _id: string,
@@ -6,7 +11,9 @@ export interface TaskType {
     completed: boolean
 }
 
+type FilterType = 'all' | 'active' | 'completed';
 export interface AppState {
+    toasts: ToastType[],
     tasks: TaskType[],
     filter: FilterType
 }
@@ -31,9 +38,16 @@ type AppActions = {
 } | {
     type: 'SET_FILTER',
     payload: { filter: FilterType }
+} | {
+    type: 'ADD_TOAST',
+    payload: { message: string }
+} | {
+    type: 'DELETE_TOAST',
+    payload: { toastId: string }
 }
 
 export const initialState: AppState = {
+    toasts: [],
     tasks: [],
     filter: 'all'
 }
@@ -115,6 +129,29 @@ export const reducer = (state: AppState, action: AppActions): AppState => {
             return {
                 ...state,
                 filter
+            }
+        }
+
+        case 'ADD_TOAST': {
+
+            const newToast = {
+                id: uuidv4(),
+                message: action.payload.message
+            }
+
+            return {
+                ...state,
+                toasts: [...state.toasts, newToast]
+            }
+        }
+
+        case 'DELETE_TOAST': {
+
+            const modifiedToasts = state.toasts.filter(toast => toast.id !== action.payload.toastId);
+
+            return {
+                ...state,
+                toasts: modifiedToasts
             }
         }
 

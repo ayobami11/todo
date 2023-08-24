@@ -61,7 +61,6 @@ export const authOptions: NextAuthOptions = {
                     });
 
                     const result = await response.json();
-                    console.log('response', result)
 
                     if (response.ok) {
                         return result.user;
@@ -72,6 +71,7 @@ export const authOptions: NextAuthOptions = {
 
                 } catch (error) {
                     console.log(error);
+                    
                     return null;
                 }
             }

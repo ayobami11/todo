@@ -6,6 +6,15 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      keyframes: {
+        loader: {
+          'from': { transform: 'translateX(0)' },
+          'to': { transform: 'translateX(-100%)' }
+        }
+      },
+      animation: {
+        loader: 'loader 5s linear forwards'
+      },
       fontFamily: {
         primary: ['var(--font-josefin-sans)'],
       },

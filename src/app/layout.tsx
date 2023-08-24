@@ -11,7 +11,7 @@ const josefinSans = Josefin_Sans({
 });
 
 import './globals.css';
-
+import ToastList from '@/app/components/ToastList';
 
 export const metadata: Metadata = {
   title: {
@@ -36,7 +36,10 @@ export default function RootLayout({
       <body className='font-primary text-lg bg-very-light-grayish-blue dark:bg-very-dark-blue'>
         <AppContextProvider>
           {children}
+
+          <ToastList />
         </AppContextProvider>
+
       </body>
     </html>
   )

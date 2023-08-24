@@ -8,7 +8,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { signIn } from 'next-auth/react';
 
+import { useAppContext } from '@/contexts/app';
+
 import googleIcon from '../../../public/assets/images/icon-google.svg';
+import githubIcon from '../../../public/assets/images/icon-github.svg';
 
 export interface LoginDetailsType {
     email: string,
@@ -24,6 +27,8 @@ const LoginForm = () => {
     const searchParams = useSearchParams();
 
     const callbackUrl = searchParams.get('callbackUrl') ?? '/';
+
+    const { state, dispatch } = useAppContext();
 
     const [formDetails, setFormDetails] = useState<LoginDetailsType>({
         email: '',
@@ -81,10 +86,18 @@ const LoginForm = () => {
 
                 if (!result?.error) {
                     router.push(callbackUrl);
-                    console.log(result?.error)
+                    console.log(result?.error);
+
+                    // dispatch({
+                    //     type: 'SHOW_TOAST_NOTIFICATION',
+                    //     payload: {
+                    //         message: 'Something went wrong. Please try again.'
+                    //     }
+                    // });
                 }
 
             } catch (error) {
+
                 console.log(error);
             }
         }
@@ -147,6 +160,12 @@ const LoginForm = () => {
             })}>
                 <Image src={googleIcon} alt='Google icon' />
                 Continue with Google
+            </button>
+            <button className='flex items-center gap-4 my-8 mx-auto border border-slate-300 rounded-md py-3 px-8 shadow-md transition-transform hover:scale-105 hover:border-2 active:scale-100 motion-reduce:transition-none motion-reduce:transform-none' onClick={() => signIn('github', {
+                callbackUrl: '/'
+            })}>
+                <Image src={githubIcon} alt='Github icon' width={26} height={24} />
+                Continue with Github
             </button>
         </>
     );

@@ -94,6 +94,13 @@ const TodoList = () => {
 
             } catch (error) {
                 console.log(error);
+
+                dispatch({
+                    type: 'ADD_TOAST',
+                    payload: {
+                        message: 'Tasks could not be fetched successfully. Please try again.'
+                    }
+                });
             }
         }
 
