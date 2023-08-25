@@ -12,7 +12,7 @@ import crossIcon from '../../../public/assets/images/icon-cross.svg';
 
 const ToastItem = ({ id, message }: ToastType) => {
 
-    const { state, dispatch } = useAppContext();
+    const { dispatch } = useAppContext();
 
     const closeToast = useCallback(() => {
         dispatch({ 
@@ -30,12 +30,12 @@ const ToastItem = ({ id, message }: ToastType) => {
     }, [closeToast]);
 
     return (
-        <li className='relative overflow-hidden flex justify-between items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800'>
+        <li className='relative overflow-hidden will-change-transform animate-toast flex gap-2 justify-between items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800'>
             <output role='status'>{message}</output>
             <button
                 onClick={closeToast}
                 className='p-2 rounded-full hover:bg-gray-400/5 transition-colors ease-in-out duration-300 active:scale-90'>
-                <Image src={crossIcon} alt='Close icon' aria-hidden='true' />
+                <Image src={crossIcon} alt='Close icon' aria-hidden='true' width={14} />
                 <span className="sr-only">Close</span>
             </button>
 

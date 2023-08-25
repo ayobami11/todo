@@ -4,7 +4,6 @@ import { useAppContext } from '@/contexts/app';
 
 import ToastItem from '@/app/components/ToastItem';
 
-
 const ToastList = () => {
 
     const { state } = useAppContext();

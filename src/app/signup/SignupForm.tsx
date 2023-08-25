@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useRef } from 'react';
-
 import { useRouter } from 'next/navigation';
 
-import { useAppContext } from '@/contexts/app';
-
 import useSWRMutation from 'swr/mutation';
+
+import { useState, useRef } from 'react';
+
+import { useAppContext } from '@/contexts/app';
 
 export interface SignupDetailsType {
     email: string,
@@ -17,7 +17,7 @@ export interface SignupDetailsType {
 
 const SignupForm = () => {
 
-    const { state, dispatch } = useAppContext();
+    const { dispatch } = useAppContext();
 
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -105,7 +105,7 @@ const SignupForm = () => {
                     dispatch({
                         type: 'ADD_TOAST',
                         payload: {
-                            message: 'Something went wrong. Please try again.'
+                            message: 'Signup failed.'
                         }
                     });
                 }
@@ -126,12 +126,13 @@ const SignupForm = () => {
             <div className='flex flex-col-reverse gap-1 mb-7'>
                 <input
                     className={
-                        `peer grow bg-transparent px-3 py-2 shadow-sm border 
-                            border-slate-300 rounded-md focus:outline-none focus:border-bright-blue focus:ring-1 focus:ring-bright-blue`
+                        `peer grow bg-transparent px-3 py-2 shadow-sm border border-gray-400
+                            dark:border-slate-300 rounded-md focus:outline-none focus:border-bright-blue focus:ring-1 focus:ring-bright-blue`
                     }
                     type='email'
                     id='email'
                     name='email'
+                    autoComplete='email'
                     value={formDetails.email}
                     placeholder='johndoe@example.com'
                     maxLength={30}
@@ -146,12 +147,13 @@ const SignupForm = () => {
             <div className='flex flex-col-reverse gap-1 mb-7'>
                 <input
                     className={
-                        `peer grow bg-transparent px-3 py-2 shadow-sm border 
-                            border-slate-300 rounded-md focus:outline-none focus:border-bright-blue focus:ring-1 focus:ring-bright-blue`
+                        `peer grow bg-transparent px-3 py-2 shadow-sm border border-gray-400
+                            dark:border-slate-300 rounded-md focus:outline-none focus:border-bright-blue focus:ring-1 focus:ring-bright-blue`
                     }
                     type='text'
                     id='name'
                     name='name'
+                    autoComplete='name'
                     value={formDetails.name}
                     placeholder='John Doe'
                     maxLength={30}
@@ -166,12 +168,13 @@ const SignupForm = () => {
             <div className='flex flex-col-reverse gap-1 mb-7'>
                 <input
                     className={
-                        `peer grow bg-transparent px-3 py-2 shadow-sm border 
-                            border-slate-300 rounded-md focus:outline-none focus:border-bright-blue focus:ring-1 focus:ring-bright-blue`
+                        `peer grow bg-transparent px-3 py-2 shadow-sm border border-gray-400
+                            dark:border-slate-300 rounded-md focus:outline-none focus:border-bright-blue focus:ring-1 focus:ring-bright-blue`
                     }
                     type='password'
                     id='password'
                     name='password'
+                    autoComplete='new-password'
                     value={formDetails.password}
                     minLength={8}
                     maxLength={30}

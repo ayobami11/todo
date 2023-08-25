@@ -62,17 +62,21 @@ export const authOptions: NextAuthOptions = {
 
                     const result = await response.json();
 
-                    if (response.ok) {
+                    if (response.status === 200) {
                         return result.user;
+                    } else if (response.status === 400) {
+                        throw new Error(result.message)
                     } else {
-                        return null;
+                        throw new Error('Login failed.');
                     }
 
 
                 } catch (error) {
                     console.log(error);
-                    
-                    return null;
+
+                    if (error instanceof Error) {
+                        throw new Error(error.message);
+                    }
                 }
             }
         })
@@ -91,9 +95,9 @@ export const authOptions: NextAuthOptions = {
                     await connectToDatabase();
 
                     // checks if user already exists
-                    const existingUser = await User.findOne({ 
+                    const existingUser = await User.findOne({
                         email: profile.email,
-                        account_provider: account.provider 
+                        account_provider: account.provider
                     });
 
                     if (existingUser) {

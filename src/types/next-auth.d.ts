@@ -11,11 +11,11 @@ declare module 'next-auth' {
         accessToken: string,
         user: {
             id: string,
+            name: string,
+            email: string
         } 
-        // & DefaultSession['user']
     }
 
-    
     interface User {
         _id: string,
         access_token: string

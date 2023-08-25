@@ -32,7 +32,7 @@ const TodoMenu = () => {
   }, [dispatch, filter]);
 
   return (
-    <menu className='flex justify-center gap-6 mt-4 p-4 font-bold bg-very-light-gray dark:bg-very-dark-desaturated-blue text-dark-grayish-blue dark:text-dark-grayish-blue-alt rounded-md'>
+    <menu className='flex justify-center gap-6 mt-4 p-4 font-bold bg-very-light-gray dark:bg-very-dark-desaturated-blue text-dark-grayish-blue dark:text-dark-grayish-blue-alt rounded-md md:mt-0 md:p-0'>
       <li>
         <input
           className='appearance-none'
@@ -73,4 +73,4 @@ const TodoMenu = () => {
   )
 }
 
-export default TodoMenu
+export default TodoMenu;

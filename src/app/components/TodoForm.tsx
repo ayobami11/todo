@@ -66,7 +66,7 @@ const TodoForm = () => {
                     dispatch({
                         type: 'ADD_TOAST',
                         payload: {
-                            message: 'Task added successfully.'
+                            message: 'Task added.'
                         }
                     });
                 }
@@ -77,7 +77,7 @@ const TodoForm = () => {
                 dispatch({
                     type: 'ADD_TOAST',
                     payload: {
-                        message: 'Something went wrong. Please try again.'
+                        message: 'Task creation failed.'
                     }
                 });
             }
@@ -96,7 +96,7 @@ const TodoForm = () => {
             onSubmit={handleSubmit}
             className='flex flex-row-reverse items-center gap-5 bg-very-light-gray dark:bg-very-dark-desaturated-blue w-full rounded-lg p-4 mb-5'>
             <input
-                className='text-very-dark-grayish-blue dark:text-light-grayish-blue-alt-1 bg-transparent w-full autofill:bg-red-500 placeholder:text-light-grayish-blue-alt-1 dark:placeholder:text-very-dark-grayish-blue focus:outline-none'
+                className='text-very-dark-grayish-blue dark:text-light-grayish-blue-alt-1 bg-transparent w-full caret-bright-blue autofill:bg-red-500 placeholder:text-light-grayish-blue-alt-1 dark:placeholder:text-very-dark-grayish-blue focus:outline-none'
                 type='text'
                 name='message'
                 id='message'

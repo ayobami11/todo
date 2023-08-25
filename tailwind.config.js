@@ -6,14 +6,22 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      boxShadow: {
+        'list-light': '0 10px 0 clamp(2px, 1vw, 7px) hsla(0, 10%, 72.5%, 0.05), 0 20px 0 clamp(7px, 2vw, 17px) hsla(0, 10%, 72.5%, 0.05), 0 30px 0 clamp(22px, 3vw, 40px) hsla(0, 10%, 72.5%, 0.05)',
+        'list-dark': '0 10px 0 clamp(2px, 1vw, 7px) hsla(0, 0%, 12.5%, 0.075), 0 20px 0 clamp(7px, 2vw, 17px) hsla(0, 0%, 12.5%, 0.085), 0 30px 0 clamp(22px, 3vw, 40px) hsla(0, 0%, 12.5%, 0.095)'
+      },
       keyframes: {
         loader: {
           'from': { transform: 'translateX(0)' },
           'to': { transform: 'translateX(-100%)' }
-        }
+        },
+        fadeIn: { 'from': { opacity: 0 } },
+        fadeOut: { 'to': { opacity: 1 } },
+        slideIn: { 'from': { transform: 'translateY(1rem)' } }
       },
       animation: {
-        loader: 'loader 5s linear forwards'
+        loader: 'loader 5s linear forwards',
+        toast: 'fadeIn 0.3s ease, slideIn 0.3s ease, fadeOut 0.3s ease 3s'
       },
       fontFamily: {
         primary: ['var(--font-josefin-sans)'],

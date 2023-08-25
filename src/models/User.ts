@@ -55,7 +55,7 @@ schema.method('generateAccessToken', function generateAccessToken() {
         name: this.name
     }, process.env.NEXTAUTH_SECRET as string,
         {
-            expiresIn: '30 days',
+            expiresIn: '7 days',
         });
 
     this.access_token = accessToken;

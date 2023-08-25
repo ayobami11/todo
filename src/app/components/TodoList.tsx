@@ -12,9 +12,8 @@ import { StrictModeDroppable as Droppable } from '@/app/components/StrictModeDro
 
 import { useAppContext } from '@/contexts/app';
 
+import TodoMenu from '@/app/components/TodoMenu';
 import TodoItem from '@/app/components/TodoItem';
-
-import tasks from '@/app/data.json';
 
 import { TaskType } from '@/reducers/app';
 
@@ -73,9 +72,23 @@ const TodoList = () => {
 
                 if (response.ok) {
                     dispatch({ type: 'DELETE_COMPLETED_TASKS' });
+
+                    dispatch({
+                        type: 'ADD_TOAST',
+                        payload: {
+                            message: 'Tasks deleted.'
+                        }
+                    });
                 }
             } catch (error) {
                 console.log(error);
+
+                dispatch({
+                    type: 'ADD_TOAST',
+                    payload: {
+                        message: 'Task deletions failed.'
+                    }
+                });
             }
         })();
     }
@@ -90,6 +103,13 @@ const TodoList = () => {
                     const data = await response.json();
 
                     dispatch({ type: 'SET_TASKS', payload: { tasks: data.tasks } });
+
+                    dispatch({
+                        type: 'ADD_TOAST',
+                        payload: {
+                            message: 'Tasks fetched successfully.'
+                        }
+                    });
                 }
 
             } catch (error) {
@@ -98,7 +118,7 @@ const TodoList = () => {
                 dispatch({
                     type: 'ADD_TOAST',
                     payload: {
-                        message: 'Tasks could not be fetched successfully. Please try again.'
+                        message: 'Tasks could not be fetched successfully.'
                     }
                 });
             }
@@ -112,26 +132,21 @@ const TodoList = () => {
 
 
     return (
-        <div className='bg-very-light-gray dark:bg-very-dark-desaturated-blue rounded-md'>
+        <div className='bg-very-light-gray dark:bg-very-dark-desaturated-blue rounded-md shadow-list-light dark:shadow-list-dark'>
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId='droppable'>
-                    {(provided, snapshot) => (
+                    {(provided) => (
                         <ul
                             {...provided.droppableProps}
                             ref={provided.innerRef}
-                        // style={getListStyle(snapshot.isDraggingOver)}
                         >
                             {state.tasks.map((task, index) => (
                                 <Draggable key={task._id} draggableId={task._id} index={index}>
-                                    {(provided, snapshot) => (
+                                    {(provided) => (
                                         <li
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
-                                        // style={getItemStyle(
-                                        //     snapshot.isDragging,
-                                        //     provided.draggableProps.style
-                                        // )}
                                         >
 
                                             <TodoItem key={task._id} {...task} />
@@ -145,9 +160,12 @@ const TodoList = () => {
                 </Droppable>
             </DragDropContext>
             <footer className='flex p-4 justify-between text-dark-grayish-blue dark:text-dark-grayish-blue-alt'>
-                <p className='font-bold'>{numberOfTasks} {numberOfTasks === 1 ? 'item' : 'items'} left</p>
+                <p>{numberOfTasks || 'No'} {numberOfTasks === 1 ? 'item' : 'items'} left</p>
+                <div className='hidden md:block'>
+                    <TodoMenu />
+                </div>
                 <button
-                    className='capitalize font-bold hover:text-very-dark-grayish-blue dark:hover:text-light-grayish-blue-alt-1 focus:text-very-dark-grayish-blue dark:focus:text-light-grayish-blue-alt-2 focus:outline-none'
+                    className='capitalize hover:text-very-dark-grayish-blue dark:hover:text-light-grayish-blue-alt-1 focus:text-very-dark-grayish-blue dark:focus:text-light-grayish-blue-alt-2 focus:outline-none'
                     disabled={isMutatingDelete}
                     onClick={deleteCompletedTasks}
                 >Clear completed</button>

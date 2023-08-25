@@ -21,9 +21,9 @@ export async function POST(request: Request) {
                 const trimmedValue = value.trim();
 
                 if (trimmedValue.length === 0) {
-                    return NextResponse.json({ message: `Input field: ${key} cannot have an empty value` }, { status: 400 });
+                    return NextResponse.json({ message: `Input field: ${key} cannot have an empty value.` }, { status: 400 });
                 } else if (trimmedValue.length > 30) {
-                    return NextResponse.json({ message: `Input field: ${key} cannot exceed 30 characters` }, { status: 400 });
+                    return NextResponse.json({ message: `Input field: ${key} cannot exceed 30 characters.` }, { status: 400 });
                 }
             }
         }
@@ -38,18 +38,18 @@ export async function POST(request: Request) {
         });
 
         if (!user) {
-            return NextResponse.json({ message: 'Invalid credentials' }, { status: 400 });
+            return NextResponse.json({ message: 'Invalid credentials.' }, { status: 400 });
         }
 
         const isPasswordValid = await verifyPassword(data.password, user.password);
 
         if (!isPasswordValid) {
-            return NextResponse.json({ message: 'Invalid credentials' }, { status: 400 });
+            return NextResponse.json({ message: 'Invalid credentials.' }, { status: 400 });
         }
 
         await user.generateAccessToken();
 
-        return NextResponse.json({ message: 'Login was successful', user }, { status: 200 });
+        return NextResponse.json({ message: 'Login successful.', user }, { status: 200 });
     } catch (error) {
         console.log(error);
 
