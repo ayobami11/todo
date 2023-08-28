@@ -23,7 +23,10 @@ const Header = () => {
 
     const [isMounted, setIsMounted] = useState<boolean>(false);
 
-    const { theme, setTheme } = useTheme();
+    const { theme, systemTheme, setTheme } = useTheme();
+
+    // defaults to the system theme if the user hasn't selected one
+    const userTheme = theme === 'system' ? systemTheme : theme;
 
     useEffect(() => {
         setIsMounted(true);
@@ -57,7 +60,7 @@ const Header = () => {
                     isMounted ? (
                         <button className='shrink-0' onClick={toggleTheme}>
                             {
-                                theme === 'dark' ?
+                                userTheme === 'dark' ?
                                     <Image src={sunIcon} alt='Sun icon' /> :
                                     <Image src={moonIcon} alt='Moon icon' />
                             }
