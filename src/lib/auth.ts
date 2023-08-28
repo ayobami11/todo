@@ -52,9 +52,9 @@ export const authOptions: NextAuthOptions = {
                         return null;
                     }
 
-                    const endpoint = process.env.NODE_ENV === 'production' ?
-                        'https://todo-app-ayo.vercel.app/api/auth/login' :
-                        'http://localhost:3000/api/auth/login';
+                    const endpoint = process.env.NODE_ENV === 'development' ?
+                        'http://localhost:3000/api/auth/login' :
+                        'https://todo-app-ayo.vercel.app/api/auth/login';
 
                     const response = await fetch(endpoint, {
                         method: 'POST',
