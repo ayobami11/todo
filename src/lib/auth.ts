@@ -74,8 +74,9 @@ export const authOptions: NextAuthOptions = {
                 } catch (error) {
                     console.log(error);
 
+                    // 'fetch failed' likely to occur when the user is not connected to the internet
                     if (error instanceof Error) {
-                        throw new Error(error.message);
+                        throw new Error(error.message === 'fetch failed' ? 'Login failed.' : error.message);
                     }
                 }
             }
