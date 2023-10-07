@@ -63,10 +63,10 @@ const TodoList = () => {
         isMutating: isMutatingDelete
     } = useSWRMutation('/api/tasks/deleteCompleted', sendDeleteCompletedTasks);
 
-    const numberOfTasks = state.tasks.length;
     const tasksFilterKey = state.filter === 'active' ?
-        'activeTasks' : state.filter === 'completed' ?
-            'completedTasks' : 'tasks';
+    'activeTasks' : state.filter === 'completed' ?
+    'completedTasks' : 'tasks';
+    const numberOfTasks = state[tasksFilterKey].length;
 
     const deleteCompletedTasks = () => {
         (async () => {
