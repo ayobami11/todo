@@ -1,35 +1,14 @@
 'use client'
 
-import { useEffect } from 'react';
-
-import { useRouter, useSearchParams } from 'next/navigation';
-
 import { useAppContext } from '@/contexts/app';
 
 const TodoMenu = () => {
-
-  const router = useRouter();
-
-  const searchParams = useSearchParams();
-
-  const filter = searchParams.get('filter');
 
   const { state, dispatch } = useAppContext();
 
   const setFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: 'SET_FILTER', payload: { filter: event.target.value } });
-
-    router.push(`?filter=${event.target.value}`);
   }
-
-  useEffect(() => {
-    dispatch({
-      type: 'SET_FILTER',
-      payload: {
-        filter
-      }
-    });
-  }, [dispatch, filter]);
 
   return (
     <menu className='flex justify-center gap-6 mt-4 p-4 font-bold bg-very-light-gray dark:bg-very-dark-desaturated-blue text-dark-grayish-blue dark:text-dark-grayish-blue-alt rounded-md md:mt-0 md:p-0'>

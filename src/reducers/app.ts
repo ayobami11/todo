@@ -1,22 +1,17 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export interface ToastType {
-    id: string,
-    message: string
-}
+export type ToastType = Record<'id' | 'message', string>;
 
-export interface TaskType {
-    _id: string,
-    message: string,
+export type TaskType = Record<'_id' | 'message', string> & {
     completed: boolean
 }
 
 type FilterType = 'all' | 'active' | 'completed';
-export interface AppState {
-    toasts: ToastType[],
-    tasks: TaskType[],
-    filter: FilterType
-}
+
+export type AppState = Record<'tasks' | 'activeTasks' | 'completedTasks', TaskType[]> & {
+    filter: FilterType,
+    toasts: ToastType[]
+};
 
 type AppActions = {
     type: 'SET_TASKS',
@@ -49,30 +44,47 @@ type AppActions = {
 export const initialState: AppState = {
     toasts: [],
     tasks: [],
+    activeTasks: [],
+    completedTasks: [],
     filter: 'all'
 }
 
 export const reducer = (state: AppState, action: AppActions): AppState => {
     switch (action.type) {
         case 'SET_TASKS': {
+
+            const tasks = action.payload.tasks;
+            const activeTasks = [];
+            const completedTasks = [];
+
+            for (const task of tasks) {
+                task.completed ?
+                    completedTasks.push(task) :
+                    activeTasks.push(task);
+            }
+
             return {
                 ...state,
-                tasks: action.payload.tasks
+                tasks,
+                activeTasks,
+                completedTasks
             }
         }
 
         case 'ADD_TASK': {
-            const updatedTasks = [...state.tasks, action.payload.newTask];
+
+            const newTask = action.payload.newTask;
 
             return {
                 ...state,
-                tasks: updatedTasks
+                tasks: [...state.tasks, newTask],
+                activeTasks: [...state.activeTasks, newTask]
             }
         }
 
         case 'UPDATE_TASK': {
 
-            const updatedTasks = state.tasks.map(task => {
+            const tasks = state.tasks.map(task => {
                 if (task._id === action.payload.taskId) {
                     task.message = action.payload.newMessage;
                 }
@@ -80,15 +92,26 @@ export const reducer = (state: AppState, action: AppActions): AppState => {
                 return task;
             });
 
+            const activeTasks = [];
+            const completedTasks = [];
+
+            for (const task of tasks) {
+                task.completed ?
+                    completedTasks.push(task) :
+                    activeTasks.push(task);
+            }
+
             return {
                 ...state,
-                tasks: updatedTasks
+                tasks,
+                activeTasks,
+                completedTasks
             }
         }
 
         case 'TOGGLE_TASK_COMPLETED': {
 
-            const updatedTasks = state.tasks.map(task => {
+            const tasks = state.tasks.map(task => {
                 if (task._id === action.payload.taskId) {
                     task.completed = !task.completed;
                 }
@@ -96,27 +119,54 @@ export const reducer = (state: AppState, action: AppActions): AppState => {
                 return task;
             });
 
+            const activeTasks = [];
+            const completedTasks = [];
+
+            for (const task of tasks) {
+                task.completed ?
+                    completedTasks.push(task) :
+                    activeTasks.push(task);
+            }
+
             return {
                 ...state,
-                tasks: updatedTasks
+                tasks,
+                activeTasks,
+                completedTasks
             }
         }
 
         case 'DELETE_TASK': {
-            const updatedTasks = state.tasks.filter(task => task._id !== action.payload.taskId);
+
+            const tasks = [];
+            const activeTasks = [];
+            const completedTasks = [];
+
+            for (const task of state.tasks) {
+                // ignores the deleted task
+                if (task._id === action.payload.taskId) continue;
+
+                tasks.push(task);
+
+                task.completed ?
+                    completedTasks.push(task) :
+                    activeTasks.push(task);
+            }
 
             return {
                 ...state,
-                tasks: updatedTasks
+                tasks,
+                activeTasks,
+                completedTasks
             }
         }
 
         case 'DELETE_COMPLETED_TASKS': {
-            const updatedTasks = state.tasks.filter(task => !task.completed);
 
             return {
                 ...state,
-                tasks: updatedTasks
+                tasks: state.activeTasks,
+                completedTasks: []
             }
         }
 

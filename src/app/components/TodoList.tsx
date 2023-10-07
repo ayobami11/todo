@@ -57,13 +57,16 @@ const TodoList = () => {
         });
     }
 
-    const { trigger: triggerGetTasks } = useSWRMutation(`/api/tasks?filter=${state.filter}`, sendGetTasks);
+    const { trigger: triggerGetTasks } = useSWRMutation('/api/tasks', sendGetTasks);
     const {
         trigger: triggerDeleteCompleted,
         isMutating: isMutatingDelete
     } = useSWRMutation('/api/tasks/deleteCompleted', sendDeleteCompletedTasks);
 
     const numberOfTasks = state.tasks.length;
+    const tasksFilterKey = state.filter === 'active' ?
+        'activeTasks' : state.filter === 'completed' ?
+            'completedTasks' : 'tasks';
 
     const deleteCompletedTasks = () => {
         (async () => {
@@ -128,7 +131,7 @@ const TodoList = () => {
             getTasks();
         }
 
-    }, [triggerGetTasks, session?.user.id, dispatch, state.filter]);
+    }, [triggerGetTasks, session?.user.id, dispatch]);
 
 
     return (
@@ -140,7 +143,7 @@ const TodoList = () => {
                             {...provided.droppableProps}
                             ref={provided.innerRef}
                         >
-                            {state.tasks.map((task, index) => (
+                            {state[tasksFilterKey].map((task, index) => (
                                 <Draggable key={task._id} draggableId={task._id} index={index}>
                                     {(provided) => (
                                         <li

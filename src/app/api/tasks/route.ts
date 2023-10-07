@@ -9,7 +9,7 @@ import User from '@/models/User';
 import Task from '@/models/Task';
 
 
-export async function GET(request: NextRequest) {
+export async function GET() {
 
     try {
         // checks if the user is logged in
@@ -23,10 +23,6 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }
 
-        const { searchParams } = new URL(request.url);
-
-        const filter = searchParams.get('filter');
-
         await connectToDatabase();
 
         // checks if the user exists
@@ -36,12 +32,8 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ message: 'User does not exist' }, { status: 404 });
         }
 
-        // saves the new task to the database
-        let tasks = await (filter === 'active' ?
-            Task.find({ userId: session.user.id, completed: false }) :
-            filter === 'completed' ?
-                Task.find({ userId: session.user.id, completed: true }) :
-                Task.find({ userId: session.user.id })).select('message completed');
+        // gets all the tasks associated with a user
+        let tasks = await Task.find({ userId: session.user.id }).select('message completed');
 
         return NextResponse.json({ message: 'Tasks retrieved successfully', tasks }, { status: 200 });
 
